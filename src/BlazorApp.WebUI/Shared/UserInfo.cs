@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorWithIdentity.Shared
+namespace BlazorApp.WebUI.Shared
 {
     public class UserInfo
     {

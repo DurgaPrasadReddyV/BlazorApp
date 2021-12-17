@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace BlazorWithIdentity.Shared
+namespace BlazorApp.WebUI.Shared
 {
     public class RegisterParameters
     {
