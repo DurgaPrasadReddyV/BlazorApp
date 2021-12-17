@@ -10,7 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.*
+      
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+         files: './src/BlazorApp.WebUI/Server/appsettings.json'
+        env:
+         ConnectionStrings.Default: ${{ secrets.POSTGRES_CONNECTION_STRING }}
+    
       - name: Build and deploy the Docker image
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
