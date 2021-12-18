@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.0.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 16.0.0.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp.WebUI.Server", "src\BlazorApp.WebUI\Server\BlazorApp.WebUI.Server.csproj", "{DD77727C-6FF2-4762-A60E-82CFE6C353ED}"
 EndProject
@@ -18,18 +18,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|x64.Build.0 = Debug|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|x86.Build.0 = Debug|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|x64.ActiveCfg = Release|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|x64.Build.0 = Release|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|x86.ActiveCfg = Release|Any CPU
-		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|x86.Build.0 = Release|Any CPU
 		{DD77727C-6FF2-4762-A60E-82CFE6C353ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD77727C-6FF2-4762-A60E-82CFE6C353ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD77727C-6FF2-4762-A60E-82CFE6C353ED}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -42,6 +30,18 @@ Global
 		{DD77727C-6FF2-4762-A60E-82CFE6C353ED}.Release|x64.Build.0 = Release|Any CPU
 		{DD77727C-6FF2-4762-A60E-82CFE6C353ED}.Release|x86.ActiveCfg = Release|Any CPU
 		{DD77727C-6FF2-4762-A60E-82CFE6C353ED}.Release|x86.Build.0 = Release|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|x64.Build.0 = Debug|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Debug|x86.Build.0 = Debug|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|x64.ActiveCfg = Release|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|x64.Build.0 = Release|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|x86.ActiveCfg = Release|Any CPU
+		{F9FD28F4-4218-44FE-9156-520BA957677F}.Release|x86.Build.0 = Release|Any CPU
 		{F995FF9C-86EE-44EB-8258-F9A63CB5051B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F995FF9C-86EE-44EB-8258-F9A63CB5051B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F995FF9C-86EE-44EB-8258-F9A63CB5051B}.Debug|x64.ActiveCfg = Debug|Any CPU

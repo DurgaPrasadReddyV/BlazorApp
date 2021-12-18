@@ -3,41 +3,42 @@
 @inject NavigationManager navigationManager
 @inject IdentityAuthenticationStateProvider authStateProvider
 
-<PageTitle>Login</PageTitle>
+<MudText Typo="Typo.h4" GutterBottom="true">Sign In</MudText>
 
-<h1 class="h2 font-weight-normal login-title">
-    Blazor with Identity Sample
-</h1>
+<MudText>Don't have an account? <MudLink Href="/register">Sign Up</MudLink></MudText>
 
-<EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="loginParameters">
-    <DataAnnotationsValidator />
-    <h4 class="font-weight-normal text-center">Login</h4>
+<MudTextField T="string" @bind-Value="@loginParameters.UserName" Label="Username" 
+    Variant="Variant.Outlined" Class="my-6"></MudTextField>
 
-    <label for="inputUsername" class="sr-only">User Name</label>
-    <InputText id="inputUsername" class="form-control" @bind-Value="loginParameters.UserName" autofocus placeholder="Username" />
-    <ValidationMessage For="@(() => loginParameters.UserName)" />
+<MudTextField @bind-Value="@loginParameters.Password" Label="Password" 
+    Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" 
+    AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
 
-    <label for="inputPassword" class="sr-only">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="loginParameters.Password" />
-    <ValidationMessage For="@(() => loginParameters.Password)" />
-
-    <div class="form-check m-3">
-        <InputCheckbox id="inputRememberMe" class="form-check-input" @bind-Value="@loginParameters.RememberMe" />
-        <label class="form-check-label" for="inputRememberMe">Remember Me</label>
-    </div>
-
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-
-    <label class="text-danger">@error</label>
-
-    <NavLink href="register">
-        <h6 class="font-weight-normal text-center">Create account</h6>
-    </NavLink>
-</EditForm>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick = "OnSubmit"
+    Size="Size.Large" FullWidth="true" Class="mt-4">Sign In</MudButton>
 
 @code{
     LoginParameters loginParameters { get; set; } = new LoginParameters();
-    string error { get; set; }
+    string? error { get; set; }
+    bool PasswordVisibility;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void TogglePasswordVisibility()
+    {
+        @if (PasswordVisibility)
+        {
+            PasswordVisibility = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordVisibility = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
 
     async Task OnSubmit()
     {
