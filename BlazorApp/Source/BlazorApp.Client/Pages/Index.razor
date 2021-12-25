@@ -1,0 +1,12 @@
+﻿@page "/"
+@attribute [Authorize]
+
+<PageTitle>Index</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+    </Authorized>
+    <Authorizing>
+        <h1>Loading ...</h1>
+    </Authorizing>
+</AuthorizeView>

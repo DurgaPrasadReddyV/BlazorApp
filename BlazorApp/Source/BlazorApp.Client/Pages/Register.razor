@@ -1,0 +1,62 @@
+﻿@page "/register"
+@layout LoginLayout
+@inject NavigationManager navigationManager
+@inject IdentityAuthenticationStateProvider authStateProvider
+
+<MudText Typo="Typo.h4" GutterBottom="true">Sign Up</MudText>
+
+<MudText>Already have an account? <MudLink Href="/login">Sign In</MudLink></MudText>
+
+<MudTextField T="string" @bind-Value="@registerParameters.UserName" Label="Username" 
+    Variant="Variant.Outlined" Class="my-4"></MudTextField>
+
+<MudTextField @bind-Value="@registerParameters.Password" Label="Password" 
+    Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" 
+    AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" Class="mt-4"/>
+
+<MudTextField @bind-Value="@registerParameters.PasswordConfirm" Label="Confirm Password" 
+    Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" 
+    AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" Class="mt-4"/>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick = "OnSubmit"
+    Size="Size.Large" FullWidth="true" Class="mt-4">Register</MudButton>
+
+@code{
+
+    RegisterParameters registerParameters { get; set; } = new RegisterParameters();
+    string? error { get; set; }
+
+    bool PasswordVisibility;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void TogglePasswordVisibility()
+    {
+        @if (PasswordVisibility)
+        {
+            PasswordVisibility = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordVisibility = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    async Task OnSubmit()
+    {
+        error = null;
+        try
+        {
+            await authStateProvider.Register(registerParameters);
+            navigationManager.NavigateTo("");
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+    }
+}
