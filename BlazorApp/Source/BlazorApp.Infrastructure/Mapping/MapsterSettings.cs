@@ -2,7 +2,7 @@
 using BlazorApp.Shared.Identity;
 using Mapster;
 
-namespace DN.WebApi.Infrastructure.Mapping;
+namespace BlazorApp.Infrastructure.Mapping;
 
 public class MapsterSettings
 {

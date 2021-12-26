@@ -1,84 +1,41 @@
-using BlazorApp.Host.Entities;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
+using BlazorApp.Application;
+using BlazorApp.Host.Configurations;
+using BlazorApp.Infrastructure;
+using FluentValidation.AspNetCore;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<BlazorAppDbContext>(options => options.UseNpgsql(connectionString));
-builder.Services.AddIdentity<BlazorAppUser, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<BlazorAppDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.Configure<IdentityOptions>(options =>
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+Log.Information("Server Booting Up...");
+try
 {
-    // Password settings
-    options.Password.RequireDigit = false;
-    options.Password.RequiredLength = 2;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
+    var builder = WebApplication.CreateBuilder(args);
 
-    // Lockout settings
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-    options.Lockout.MaxFailedAccessAttempts = 10;
-    options.Lockout.AllowedForNewUsers = true;
-
-    // User settings
-    options.User.RequireUniqueEmail = false;
-});
-
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.HttpOnly = true;
-    options.Events.OnRedirectToLogin = context =>
+    builder.Host.AddConfigurations();
+    builder.Host.UseSerilog((_, config) =>
     {
-        context.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    };
-});
+        config.WriteTo.Console()
+        .ReadFrom.Configuration(builder.Configuration);
+    });
 
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
-builder.Services.AddSwaggerGen();
+    builder.Services.AddApplication();
+    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddControllersWithViews().AddFluentValidation();
+    builder.Services.AddRazorPages();
 
-var app = builder.Build();
+    var app = builder.Build();
 
-using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-{
-    //Note: Microsoft recommends to NOT migrate your database at Startup. 
-    //You should consider your migration strategy according to the guidelines
-    serviceScope?.ServiceProvider?.GetService<BlazorAppDbContext>()?.Database?.Migrate();
+    app.UseBlazorFrameworkFiles();
+    app.UseInfrastructure(builder.Configuration);
+    app.MapFallbackToFile("index.html");
+
+    app.Run();
 }
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+catch (Exception ex) when (!ex.GetType().Name.Equals("StopTheHostException", StringComparison.Ordinal))
 {
-    app.UseWebAssemblyDebugging();
+    Log.Fatal(ex, "Unhandled exception");
 }
-else
+finally
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    Log.Information("Server Shutting down...");
+    Log.CloseAndFlush();
 }
-
-app.UseHttpsRedirection();
-
-app.UseBlazorFrameworkFiles();
-app.UseStaticFiles();
-
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseSwagger();
-app.MapRazorPages();
-app.MapControllers();
-app.MapFallbackToFile("index.html");
-app.UseSwaggerUI();
-
-app.Run();
