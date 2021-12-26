@@ -1,8 +1,5 @@
 ﻿{
   "auth.failed": "Falha na autenticação.",
-  "tenant.invalid": "Tenant inválido.",
-  "tenant.expired": "Tenant expirado. Por favor contate o administrador do sistema.",
-  "tenant.inactive": "Tenant inativo. Por favor contate o administrador do sistema.",
   "caching.added": "Cache adicionado : {0}",
   "caching.refreshed": "Cache atualizado : {0}",
   "identity.usernotfound": "Usuário não encontrado.",

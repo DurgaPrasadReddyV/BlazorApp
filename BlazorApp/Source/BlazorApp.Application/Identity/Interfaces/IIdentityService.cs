@@ -11,7 +11,7 @@ public interface IIdentityService : ITransientService
 
     Task<IResult<string>> RegisterAsync(RegisterRequest request, string origin);
 
-    Task<IResult<string>> ConfirmEmailAsync(string userId, string code, string tenant);
+    Task<IResult<string>> ConfirmEmailAsync(string userId, string code);
 
     Task<IResult<string>> ConfirmPhoneNumberAsync(string userId, string code);
 

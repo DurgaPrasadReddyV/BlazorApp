@@ -37,9 +37,9 @@ public sealed class IdentityController : ControllerBase
     [AllowAnonymous]
     [ProducesResponseType(200)]
     [ProducesDefaultResponseType(typeof(ErrorResult<string>))]
-    public async Task<ActionResult<Result<string>>> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string code, [FromQuery] string tenant)
+    public async Task<ActionResult<Result<string>>> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string code)
     {
-        return Ok(await _identityService.ConfirmEmailAsync(userId, code, tenant));
+        return Ok(await _identityService.ConfirmEmailAsync(userId, code));
     }
 
     [HttpGet("confirm-phone-number")]

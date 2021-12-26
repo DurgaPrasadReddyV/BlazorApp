@@ -1,8 +1,5 @@
 ﻿{
   "auth.failed": "Autenticación fallida",
-  "tenant.invalid": "Inquilino no válido.",
-  "tenant.expired": "La validez del inquilino ha expirado. Comuníquese con el administrador de la aplicación.",
-  "tenant.inactive": "El inquilino no está activo. Comuníquese con el administrador de la aplicación.",
   "caching.added": "Caché agregado: {0}",
   "caching.refreshed": "Caché actualizado: {0}",
   "identity.usernotfound": "Usuario no encontrado",

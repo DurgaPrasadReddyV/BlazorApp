@@ -1,8 +1,5 @@
 {
   "auth.failed": "Authentication Failed.",
-  "tenant.invalid": "Invalid Tenant.",
-  "tenant.expired": "Tenant Validity Has Expired. Please contact the Application Administrator.",
-  "tenant.inactive": "Tenant is not Active. Please contact the Application Administrator.",
   "caching.added": "Cache Added : {0}",
   "caching.refreshed": "Cache Refreshed : {0}",
   "identity.usernotfound": "User Not Found.",

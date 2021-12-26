@@ -1,13 +1,42 @@
 ﻿@using System.Net.Http
+@using System.Net.Http.Json
+
+@using BlazorApp.Client.Infrastructure.Authentication.Jwt
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
-@using Microsoft.AspNetCore.Authorization.Infrastructure
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.DependencyInjection
+@using Microsoft.Extensions.Localization
 @using Microsoft.JSInterop
-@using BlazorApp.Shared
-@using BlazorApp.Client
-@using System.Security.Claims
-@using System.Net.Http.Json
+
 @using MudBlazor
+@using Blazored.LocalStorage
+
+@using BlazorApp.Client
+@using BlazorApp.Client.Shared
+@using BlazorApp.Client.Pages.Authentication
+@using BlazorApp.Client.Shared.Components
+@using BlazorApp.Client.Components.ErrorHandler
+@using BlazorApp.Client.Components.Notifications
+@using BlazorApp.Client.Components.ThemeManager
+@using BlazorApp.Client.Infrastructure.ApiClient
+@using BlazorApp.Client.Infrastructure.Authentication
+@using BlazorApp.Client.Infrastructure.Preferences
+@using BlazorApp.Client.Infrastructure.Notifications
+@using BlazorApp.Client.Shared.Authorization
+
+@attribute [Authorize]
+@inject NavigationManager _navigationManager
+@inject ISnackbar _snackBar
+@inject IDialogService _dialogService
+@inject IConfiguration _configurations;
+
+@inject IClientPreferenceManager _clientPreferenceManager
+@inject ILocalStorageService _localStorage;

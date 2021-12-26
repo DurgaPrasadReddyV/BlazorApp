@@ -195,7 +195,7 @@ public class IdentityService : IIdentityService
         return await Result<string>.SuccessAsync(user.Id, messages: messages);
     }
 
-    public async Task<IResult<string>> ConfirmEmailAsync(string userId, string code, string tenant)
+    public async Task<IResult<string>> ConfirmEmailAsync(string userId, string code)
     {
         var user = await _userManager.Users.IgnoreQueryFilters().Where(a => a.Id == userId && !a.EmailConfirmed).FirstOrDefaultAsync();
         if (user == null)

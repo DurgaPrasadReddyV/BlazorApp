@@ -23,8 +23,6 @@ public sealed class TokensController : ControllerBase
 
     [HttpPost]
     [AllowAnonymous]
-    [SwaggerHeader(HeaderConstants.Tenant, "Input your tenant Id to access this API", "", true)]
-    [OpenApiOperation("Submit Credentials with Tenant Key to generate valid Access Token.", "")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400, Type = typeof(HttpValidationProblemDetails))]
     [ProducesDefaultResponseType(typeof(ErrorResult<string>))]
@@ -36,7 +34,6 @@ public sealed class TokensController : ControllerBase
 
     [HttpPost("refresh")]
     [AllowAnonymous]
-    [SwaggerHeader(HeaderConstants.Tenant, "Input your tenant Id to access this API", "", true)]
     [ProducesResponseType(200)]
     [ProducesDefaultResponseType(typeof(ErrorResult<string>))]
     public async Task<ActionResult<Result<TokenResponse>>> RefreshAsync(RefreshTokenRequest request)
