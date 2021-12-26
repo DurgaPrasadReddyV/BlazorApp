@@ -10,7 +10,6 @@ using BlazorApp.Domain.Common;
 using BlazorApp.Domain.Identity;
 using BlazorApp.Infrastructure.Identity.Extensions;
 using BlazorApp.Infrastructure.Identity.Models;
-using BlazorApp.Infrastructure.Mailing;
 using BlazorApp.Shared.Identity;
 using BlazorApp.Shared.Mailing;
 using Microsoft.AspNetCore.Identity;
@@ -27,33 +26,21 @@ public class IdentityService : IIdentityService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly IJobService _jobService;
-    private readonly IMailService _mailService;
-    private readonly MailSettings _mailSettings;
     private readonly IStringLocalizer<IdentityService> _localizer;
     private readonly IFileStorageService _fileStorage;
-    private readonly IEmailTemplateService _templateService;
 
     public IdentityService(
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
-        IJobService jobService,
-        IMailService mailService,
-        IOptions<MailSettings> mailSettings,
         IStringLocalizer<IdentityService> localizer,
-        IFileStorageService fileStorage,
-        IEmailTemplateService templateService)
+        IFileStorageService fileStorage)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _roleManager = roleManager;
-        _jobService = jobService;
-        _mailService = mailService;
-        _mailSettings = mailSettings.Value;
         _localizer = localizer;
         _fileStorage = fileStorage;
-        _templateService = templateService;
     }
 
     public async Task<string> GetOrCreateFromPrincipalAsync(ClaimsPrincipal principal)
@@ -180,18 +167,6 @@ public class IdentityService : IIdentityService
 
         var messages = new List<string> { string.Format(_localizer["User {0} Registered."], user.UserName) };
 
-        if (_mailSettings.EnableVerification && !string.IsNullOrEmpty(user.Email))
-        {
-            // send verification email
-            string emailVerificationUri = await GetEmailVerificationUriAsync(user, origin);
-            var mailRequest = new MailRequest(
-                new List<string> { user.Email },
-                _localizer["Confirm Registration"],
-                _templateService.GenerateEmailConfirmationMail(user.UserName ?? "User", user.Email, emailVerificationUri));
-            _jobService.Enqueue(() => _mailService.SendAsync(mailRequest));
-            messages.Add(_localizer[$"Please check {user.Email} to verify your account!"]);
-        }
-
         return await Result<string>.SuccessAsync(user.Id, messages: messages);
     }
 
@@ -263,7 +238,6 @@ public class IdentityService : IIdentityService
             new List<string> { request.Email },
             _localizer["Reset Password"],
             _localizer[$"Your Password Reset Token is '{code}'. You can reset your password using the {endpointUri} Endpoint."]);
-        _jobService.Enqueue(() => _mailService.SendAsync(mailRequest));
         return await Result.SuccessAsync(_localizer["Password Reset Mail has been sent to your authorized Email."]);
     }
 

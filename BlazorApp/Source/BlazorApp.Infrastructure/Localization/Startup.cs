@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using BlazorApp.Infrastructure.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
@@ -13,14 +12,8 @@ internal static class Startup
     internal static IServiceCollection AddLocalization(this IServiceCollection services, IConfiguration config)
     {
         services.AddLocalization();
-
         services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
-
-        var middlewareSettings = config.GetSection(nameof(MiddlewareSettings)).Get<MiddlewareSettings>();
-        if (middlewareSettings.EnableLocalization)
-        {
-            services.AddSingleton<LocalizationMiddleware>();
-        }
+        services.AddSingleton<LocalizationMiddleware>();
 
         return services;
     }
@@ -32,11 +25,7 @@ internal static class Startup
             DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US"))
         });
 
-        var middlewareSettings = config.GetSection(nameof(MiddlewareSettings)).Get<MiddlewareSettings>();
-        if (middlewareSettings.EnableLocalization)
-        {
-            app.UseMiddleware<LocalizationMiddleware>();
-        }
+        app.UseMiddleware<LocalizationMiddleware>();
 
         return app;
     }

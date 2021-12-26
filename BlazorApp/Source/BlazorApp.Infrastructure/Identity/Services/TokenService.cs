@@ -8,7 +8,6 @@ using BlazorApp.Application.Identity.Interfaces;
 using BlazorApp.Application.Wrapper;
 using BlazorApp.Domain.Identity;
 using BlazorApp.Infrastructure.Identity.Models;
-using BlazorApp.Infrastructure.Mailing;
 using BlazorApp.Infrastructure.Persistence.Contexts;
 using BlazorApp.Shared.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -23,18 +22,15 @@ public class TokenService : ITokenService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IStringLocalizer<TokenService> _localizer;
-    private readonly MailSettings _mailSettings;
     private readonly JwtSettings _jwtSettings;
 
     public TokenService(
         UserManager<ApplicationUser> userManager,
         IOptions<JwtSettings> jwtSettings,
-        IStringLocalizer<TokenService> localizer,
-        IOptions<MailSettings> mailSettings)
+        IStringLocalizer<TokenService> localizer)
     {
         _userManager = userManager;
         _localizer = localizer;
-        _mailSettings = mailSettings.Value;
         _jwtSettings = jwtSettings.Value;
     }
 
@@ -49,11 +45,6 @@ public class TokenService : ITokenService
         if (!user.IsActive)
         {
             throw new IdentityException(_localizer["identity.usernotactive"], statusCode: HttpStatusCode.Unauthorized);
-        }
-
-        if (_mailSettings.EnableVerification && !user.EmailConfirmed)
-        {
-            throw new IdentityException(_localizer["identity.emailnotconfirmed"], statusCode: HttpStatusCode.Unauthorized);
         }
 
         bool passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);

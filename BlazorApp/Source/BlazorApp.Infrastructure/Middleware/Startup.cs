@@ -12,28 +12,19 @@ internal static class Startup
     internal static IApplicationBuilder UseExceptionMiddleware(this IApplicationBuilder app) =>
         app.UseMiddleware<ExceptionMiddleware>();
 
-    internal static IServiceCollection AddRequestLogging(this IServiceCollection services, IConfiguration config)
+    internal static IServiceCollection AddRequestLogging(this IServiceCollection services)
     {
-        if (GetMiddlewareSettings(config).EnableHttpsLogging)
-        {
-            services.AddSingleton<RequestLoggingMiddleware>();
-            services.AddScoped<ResponseLoggingMiddleware>();
-        }
+        services.AddSingleton<RequestLoggingMiddleware>();
+        services.AddScoped<ResponseLoggingMiddleware>();
 
         return services;
     }
 
-    internal static IApplicationBuilder UseRequestLogging(this IApplicationBuilder app, IConfiguration config)
+    internal static IApplicationBuilder UseRequestLogging(this IApplicationBuilder app)
     {
-        if (GetMiddlewareSettings(config).EnableHttpsLogging)
-        {
-            app.UseMiddleware<RequestLoggingMiddleware>();
-            app.UseMiddleware<ResponseLoggingMiddleware>();
-        }
+        app.UseMiddleware<RequestLoggingMiddleware>();
+        app.UseMiddleware<ResponseLoggingMiddleware>();
 
         return app;
     }
-
-    private static MiddlewareSettings GetMiddlewareSettings(IConfiguration config) =>
-        config.GetSection(nameof(MiddlewareSettings)).Get<MiddlewareSettings>();
 }

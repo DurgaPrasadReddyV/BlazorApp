@@ -1,16 +1,12 @@
 using BlazorApp.Infrastructure.Caching;
 using BlazorApp.Infrastructure.Common;
-using BlazorApp.Infrastructure.Cors;
 using BlazorApp.Infrastructure.FileStorage;
-using BlazorApp.Infrastructure.Hangfire;
 using BlazorApp.Infrastructure.Identity;
 using BlazorApp.Infrastructure.Localization;
-using BlazorApp.Infrastructure.Mailing;
 using BlazorApp.Infrastructure.Mapping;
 using BlazorApp.Infrastructure.Middleware;
 using BlazorApp.Infrastructure.Notifications;
 using BlazorApp.Infrastructure.Persistence;
-using BlazorApp.Infrastructure.SecurityHeaders;
 using BlazorApp.Infrastructure.Seeding;
 using BlazorApp.Infrastructure.Swagger;
 using Microsoft.AspNetCore.Builder;
@@ -27,17 +23,14 @@ public static class Startup
         MapsterSettings.Configure();
         return services
             .AddApiVersioning()
-            .AddCaching(config)
-            .AddCorsPolicy(config)
+            .AddCaching()
             .AddCurrentUser()
             .AddExceptionMiddleware()
-            .AddHangfire(config)
             .AddIdentity(config)
             .AddLocalization(config)
-            .AddMailing(config)
-            .AddNotifications(config)
+            .AddNotifications()
             .AddPermissions()
-            .AddRequestLogging(config)
+            .AddRequestLogging()
             .AddRouting(options => options.LowercaseUrls = true)
             .AddSeeders()
             .AddServices()
@@ -49,17 +42,14 @@ public static class Startup
         appBuilder
             .UseLocalization(config)
             .UseStaticFiles()
-            .UseSecurityHeaders(config)
             .UseFileStorage()
             .UseExceptionMiddleware()
             .UseLocalization(config)
             .UseRouting()
-            .UseCorsPolicy()
             .UseAuthentication()
             .UseCurrentUser()
             .UseAuthorization()
-            .UseRequestLogging(config)
-            .UseHangfireDashboard(config)
+            .UseRequestLogging()
             .UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireAuthorization();

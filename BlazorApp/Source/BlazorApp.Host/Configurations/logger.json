@@ -38,25 +38,6 @@
           "retainedFileCountLimit": 5
         },
         "Name": "File"
-      },
-      {
-        "Name": "Seq",
-        "Args": {
-          "serverUrl": "http://localhost:5341"
-        }
-      },
-      {
-        "Name": "Hangfire"
-      },
-      {
-        "Name": "Elasticsearch",
-        "Args": {
-          "nodeUris": "http://localhost:9200;",
-          "indexFormat": "BlazorApp-logs-{0:yyyy.MM}",
-          "numberOfShards": 2,
-          "numberOfReplicas": 1,
-          "restrictedToMinimumLevel": "Information"
-        }
       }
     ]
   }

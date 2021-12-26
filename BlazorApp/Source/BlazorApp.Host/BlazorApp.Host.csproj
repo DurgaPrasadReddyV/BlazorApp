@@ -31,8 +31,5 @@
 		<None Update="Files\full-stack-hero-logo.png">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Include="Email Templates\*.html">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
 	</ItemGroup>
 </Project>
