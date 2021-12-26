@@ -12,8 +12,8 @@ public class ApplicationDbContext : BaseDbContext
     public IDbConnection Connection => Database.GetDbConnection();
     private readonly ICurrentUser _currentUserService;
 
-    public ApplicationDbContext(DbContextOptions options, ICurrentUser currentUserService, ISerializerService serializer, IEventService eventService)
-    : base(options, currentUserService, serializer)
+    public ApplicationDbContext(DbContextOptions options, ICurrentUser currentUserService, IEventService eventService)
+    : base(options)
     {
         _currentUserService = currentUserService;
         _eventService = eventService;

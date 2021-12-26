@@ -1,6 +1,3 @@
-using BlazorApp.Application.Common;
-using BlazorApp.Application.Common.Constants;
-using BlazorApp.Application.Common.Interfaces;
 using BlazorApp.Application.Identity.Interfaces;
 using BlazorApp.Application.Wrapper;
 using BlazorApp.Domain.Identity;
@@ -16,26 +13,19 @@ namespace BlazorApp.Infrastructure.Identity.Services;
 public class RoleClaimsService : IRoleClaimsService
 {
     private readonly ApplicationDbContext _db;
-    private readonly ICacheService _cache;
     private readonly IStringLocalizer<RoleClaimsService> _localizer;
 
-    public RoleClaimsService(ApplicationDbContext context, ICacheService cache, IStringLocalizer<RoleClaimsService> localizer)
+    public RoleClaimsService(ApplicationDbContext context, IStringLocalizer<RoleClaimsService> localizer)
     {
         _db = context;
-        _cache = cache;
         _localizer = localizer;
     }
 
     public async Task<bool> HasPermissionAsync(string userId, string permission)
     {
-        var roles = await _cache.GetOrSetAsync(
-            CacheKeys.GetCacheKey(ClaimConstants.Permission, userId),
-            async () =>
-            {
-                var userRoles = await _db.UserRoles.Where(a => a.UserId == userId).Select(a => a.RoleId).ToListAsync();
-                var applicationRoles = await _db.Roles.Where(a => userRoles.Contains(a.Id)).ToListAsync();
-                return applicationRoles.Adapt<List<RoleDto>>();
-            });
+        var userRoles = await _db.UserRoles.Where(a => a.UserId == userId).Select(a => a.RoleId).ToListAsync();
+        var applicationRoles = await _db.Roles.Where(a => userRoles.Contains(a.Id)).ToListAsync();
+        var roles = applicationRoles.Adapt<List<RoleDto>>();
 
         if (roles is not null)
         {

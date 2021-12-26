@@ -2,8 +2,6 @@ using System.Data;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using Dapper;
-using BlazorApp.Application.Common;
-using BlazorApp.Application.Common.Constants;
 using BlazorApp.Application.Common.Exceptions;
 using BlazorApp.Application.Common.Interfaces;
 using BlazorApp.Application.Common.Specifications;
@@ -21,13 +19,11 @@ namespace BlazorApp.Infrastructure.Persistence;
 public class RepositoryAsync : IRepositoryAsync
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly ICacheService _cache;
     private readonly IStringLocalizer<RepositoryAsync> _localizer;
 
-    public RepositoryAsync(ApplicationDbContext dbContext, ICacheService cache, IStringLocalizer<RepositoryAsync> localizer)
+    public RepositoryAsync(ApplicationDbContext dbContext, IStringLocalizer<RepositoryAsync> localizer)
     {
         _dbContext = dbContext;
-        _cache = cache;
         _localizer = localizer;
     }
 
@@ -153,9 +149,7 @@ public class RepositoryAsync : IRepositoryAsync
                 : default;
 
         // Only get from cache when no includes defined
-        var dto = includes == null
-            ? await _cache.GetOrSetAsync(CacheKeys.GetCacheKey<T>(entityId), getDto, cancellationToken: cancellationToken)
-            : await getDto();
+        var dto = await getDto();
 
         return dto is null
             ? throw new EntityNotFoundException(string.Format(_localizer["entity.notfound"], typeof(T).Name, entityId))
@@ -282,7 +276,7 @@ public class RepositoryAsync : IRepositoryAsync
 
     // Update
 
-    public Task UpdateAsync<T>(T entity, CancellationToken cancellationToken = default)
+    public void UpdateAsync<T>(T entity, CancellationToken cancellationToken = default)
     where T : BaseEntity
     {
         if (_dbContext.Entry(entity).State == EntityState.Unchanged)
@@ -295,10 +289,9 @@ public class RepositoryAsync : IRepositoryAsync
         _ = existing ?? throw new EntityNotFoundException(string.Format(_localizer["entity.notfound"], typeof(T).Name, entity.Id));
 
         _dbContext.Entry(existing).CurrentValues.SetValues(entity);
-        return _cache.RemoveAsync(CacheKeys.GetCacheKey<T>(entity.Id), cancellationToken);
     }
 
-    public async Task UpdateRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    public void UpdateRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     where T : BaseEntity
     {
         foreach (var entity in entities)
@@ -313,17 +306,15 @@ public class RepositoryAsync : IRepositoryAsync
             _ = existing ?? throw new EntityNotFoundException(string.Format(_localizer["entity.notfound"], typeof(T).Name, entity.Id));
 
             _dbContext.Entry(existing).CurrentValues.SetValues(entity);
-            await _cache.RemoveAsync(CacheKeys.GetCacheKey<T>(entity.Id), cancellationToken);
         }
     }
 
     // Delete
 
-    public Task RemoveAsync<T>(T entity, CancellationToken cancellationToken = default)
+    public void RemoveAsync<T>(T entity, CancellationToken cancellationToken = default)
     where T : BaseEntity
     {
         _dbContext.Set<T>().Remove(entity);
-        return _cache.RemoveAsync(CacheKeys.GetCacheKey<T>(entity.Id), cancellationToken);
     }
 
     public async Task<T> RemoveByIdAsync<T>(Guid entityId, CancellationToken cancellationToken = default)
@@ -333,17 +324,15 @@ public class RepositoryAsync : IRepositoryAsync
         _ = entity ?? throw new EntityNotFoundException(string.Format(_localizer["entity.notfound"], typeof(T).Name, entityId));
 
         _dbContext.Set<T>().Remove(entity);
-        await _cache.RemoveAsync(CacheKeys.GetCacheKey<T>(entityId), cancellationToken);
         return entity;
     }
 
-    public async Task RemoveRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    public void RemoveRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     where T : BaseEntity
     {
         foreach (var entity in entities)
         {
             _dbContext.Set<T>().Remove(entity);
-            await _cache.RemoveAsync(CacheKeys.GetCacheKey<T>(entity.Id), cancellationToken);
         }
     }
 
@@ -357,7 +346,6 @@ public class RepositoryAsync : IRepositoryAsync
                 x =>
             {
                 _dbContext.Entry(x).State = EntityState.Deleted;
-                _cache.RemoveAsync(CacheKeys.GetCacheKey<T>(x.Id), cancellationToken).GetAwaiter().GetResult();
             },
                 cancellationToken: cancellationToken);
 

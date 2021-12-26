@@ -13,14 +13,7 @@ public class JsonStringLocalizer : IStringLocalizer
 
     private string DefaultCulture => "en-US";
 
-    private readonly ICacheService _cache;
-
     private readonly JsonSerializer _serializer = new();
-
-    public JsonStringLocalizer(ICacheService cache)
-    {
-        _cache = cache;
-    }
 
     public LocalizedString this[string name]
     {
@@ -77,9 +70,7 @@ public class JsonStringLocalizer : IStringLocalizer
         string fullFilePath = Path.GetFullPath(relativeFilePath);
         if (File.Exists(fullFilePath))
         {
-            return _cache.GetOrSet(
-                $"locale_{culture}_{key}",
-                () => PullDeserialize<string>(key, Path.GetFullPath(relativeFilePath)));
+            return PullDeserialize<string>(key, Path.GetFullPath(relativeFilePath));
         }
 
         WriteEmptyKeys(new CultureInfo("en-US"), fullFilePath);

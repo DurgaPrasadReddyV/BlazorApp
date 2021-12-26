@@ -1,5 +1,4 @@
 using BlazorApp.Application;
-using BlazorApp.Host.Configurations;
 using BlazorApp.Infrastructure;
 using FluentValidation.AspNetCore;
 using Serilog;
@@ -10,11 +9,17 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.AddConfigurations();
+    builder.Host.ConfigureAppConfiguration((context, config) =>
+    {
+        var env = context.HostingEnvironment;
+        config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables();
+    });
+
     builder.Host.UseSerilog((_, config) =>
     {
-        config.WriteTo.Console()
-        .ReadFrom.Configuration(builder.Configuration);
+        config.ReadFrom.Configuration(builder.Configuration);
     });
 
     builder.Services.AddApplication();

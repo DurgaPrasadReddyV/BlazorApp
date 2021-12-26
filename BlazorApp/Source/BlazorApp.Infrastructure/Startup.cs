@@ -1,4 +1,3 @@
-using BlazorApp.Infrastructure.Caching;
 using BlazorApp.Infrastructure.Common;
 using BlazorApp.Infrastructure.FileStorage;
 using BlazorApp.Infrastructure.Identity;
@@ -23,9 +22,7 @@ public static class Startup
         MapsterSettings.Configure();
         return services
             .AddApiVersioning()
-            .AddCaching()
             .AddCurrentUser()
-            .AddExceptionMiddleware()
             .AddIdentity(config)
             .AddLocalization(config)
             .AddNotifications()
@@ -43,7 +40,6 @@ public static class Startup
             .UseLocalization(config)
             .UseStaticFiles()
             .UseFileStorage()
-            .UseExceptionMiddleware()
             .UseLocalization(config)
             .UseRouting()
             .UseAuthentication()

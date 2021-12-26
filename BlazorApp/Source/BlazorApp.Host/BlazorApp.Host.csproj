@@ -25,9 +25,6 @@
 		<ProjectReference Include="..\BlazorApp.Shared\BlazorApp.Shared.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Update="Configurations\*.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
 		<None Update="Files\full-stack-hero-logo.png">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>

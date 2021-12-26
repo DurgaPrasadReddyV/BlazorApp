@@ -59,16 +59,16 @@ public interface IRepositoryAsync : ITransientService
     Task<IList<Guid>> CreateRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     where T : BaseEntity;
 
-    Task UpdateAsync<T>(T entity, CancellationToken cancellationToken = default)
+    void UpdateAsync<T>(T entity, CancellationToken cancellationToken = default)
     where T : BaseEntity;
 
-    Task UpdateRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    void UpdateRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     where T : BaseEntity;
 
-    Task RemoveAsync<T>(T entity, CancellationToken cancellationToken = default)
+    void RemoveAsync<T>(T entity, CancellationToken cancellationToken = default)
     where T : BaseEntity;
 
-    Task RemoveRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    void RemoveRangeAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     where T : BaseEntity;
 
     Task<T> RemoveByIdAsync<T>(Guid entityId, CancellationToken cancellationToken = default)
