@@ -21,16 +21,13 @@ namespace BlazorApp.Infrastructure.Identity.Services;
 public class TokenService : ITokenService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IStringLocalizer<TokenService> _localizer;
     private readonly JwtSettings _jwtSettings;
 
     public TokenService(
         UserManager<ApplicationUser> userManager,
-        IOptions<JwtSettings> jwtSettings,
-        IStringLocalizer<TokenService> localizer)
+        IOptions<JwtSettings> jwtSettings)
     {
         _userManager = userManager;
-        _localizer = localizer;
         _jwtSettings = jwtSettings.Value;
     }
 
@@ -39,18 +36,18 @@ public class TokenService : ITokenService
         var user = await _userManager.FindByEmailAsync(request.Email.Trim().Normalize());
         if (user == null)
         {
-            throw new IdentityException(_localizer["identity.usernotfound"], statusCode: HttpStatusCode.Unauthorized);
+            throw new IdentityException("User Not Found.", statusCode: HttpStatusCode.Unauthorized);
         }
 
         if (!user.IsActive)
         {
-            throw new IdentityException(_localizer["identity.usernotactive"], statusCode: HttpStatusCode.Unauthorized);
+            throw new IdentityException("User Not Active.Please contact the administrator.", statusCode: HttpStatusCode.Unauthorized);
         }
 
         bool passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!passwordValid)
         {
-            throw new IdentityException(_localizer["identity.invalidcredentials"], statusCode: HttpStatusCode.Unauthorized);
+            throw new IdentityException("Provided Credentials are invalid.", statusCode: HttpStatusCode.Unauthorized);
         }
 
         user.RefreshToken = GenerateRefreshToken();
@@ -65,7 +62,7 @@ public class TokenService : ITokenService
     {
         if (request is null)
         {
-            throw new IdentityException(_localizer["identity.invalidtoken"], statusCode: HttpStatusCode.Unauthorized);
+            throw new IdentityException("Invalid Token.", statusCode: HttpStatusCode.Unauthorized);
         }
 
         var userPrincipal = GetPrincipalFromExpiredToken(request.Token);
@@ -73,12 +70,12 @@ public class TokenService : ITokenService
         var user = await _userManager.FindByEmailAsync(userEmail);
         if (user == null)
         {
-            throw new IdentityException(_localizer["identity.usernotfound"], statusCode: HttpStatusCode.NotFound);
+            throw new IdentityException("User Not Found.", statusCode: HttpStatusCode.NotFound);
         }
 
         if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
-            throw new IdentityException(_localizer["identity.invalidrefreshtoken"], statusCode: HttpStatusCode.Unauthorized);
+            throw new IdentityException("Invalid Refresh Token.", statusCode: HttpStatusCode.Unauthorized);
         }
 
         string token = GenerateEncryptedToken(GetSigningCredentials(), GetClaims(user, ipAddress));
@@ -151,7 +148,7 @@ public class TokenService : ITokenService
                 SecurityAlgorithms.HmacSha256,
                 StringComparison.InvariantCultureIgnoreCase))
         {
-            throw new IdentityException(_localizer["identity.invalidtoken"], statusCode: HttpStatusCode.Unauthorized);
+            throw new IdentityException("Invalid Token.", statusCode: HttpStatusCode.Unauthorized);
         }
 
         return principal;

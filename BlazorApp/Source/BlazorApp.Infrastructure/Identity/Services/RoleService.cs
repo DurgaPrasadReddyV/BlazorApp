@@ -21,15 +21,13 @@ public class RoleService : IRoleService
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
-    private readonly IStringLocalizer<RoleService> _localizer;
     private readonly IRoleClaimsService _roleClaimService;
 
-    public RoleService(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IStringLocalizer<RoleService> localizer, ICurrentUser currentUser, IRoleClaimsService roleClaimService)
+    public RoleService(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context, ICurrentUser currentUser, IRoleClaimsService roleClaimService)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _context = context;
-        _localizer = localizer;
         _currentUser = currentUser;
         _roleClaimService = roleClaimService;
     }
@@ -44,7 +42,7 @@ public class RoleService : IRoleService
 
         if (DefaultRoles.Contains(existingRole.Name))
         {
-            return await Result<string>.FailAsync(string.Format(_localizer["Not allowed to delete {0} Role."], existingRole.Name));
+            return await Result<string>.FailAsync(string.Format("Not allowed to delete {0} Role.", existingRole.Name));
         }
 
         bool roleIsNotUsed = true;
@@ -60,11 +58,11 @@ public class RoleService : IRoleService
         if (roleIsNotUsed)
         {
             await _roleManager.DeleteAsync(existingRole);
-            return await Result<string>.SuccessAsync(existingRole.Id, string.Format(_localizer["Role {0} Deleted."], existingRole.Name));
+            return await Result<string>.SuccessAsync(existingRole.Id, string.Format("Role {0} Deleted.", existingRole.Name));
         }
         else
         {
-            return await Result<string>.FailAsync(string.Format(_localizer["Not allowed to delete {0} Role as it is being used."], existingRole.Name));
+            return await Result<string>.FailAsync(string.Format("Not allowed to delete {0} Role as it is being used.", existingRole.Name));
         }
     }
 
@@ -112,7 +110,7 @@ public class RoleService : IRoleService
     {
         if (string.IsNullOrEmpty(request.Name))
         {
-            throw new IdentityException(_localizer["Name is required"], statusCode: HttpStatusCode.BadRequest);
+            throw new IdentityException("Name is required", statusCode: HttpStatusCode.BadRequest);
         }
 
         if (string.IsNullOrEmpty(request.Id))
@@ -120,7 +118,7 @@ public class RoleService : IRoleService
             var existingRole = await _roleManager.FindByNameAsync(request.Name);
             if (existingRole != null)
             {
-                throw new IdentityException(_localizer["Similar Role already exists."], statusCode: System.Net.HttpStatusCode.BadRequest);
+                throw new IdentityException("Similar Role already exists.", statusCode: System.Net.HttpStatusCode.BadRequest);
             }
 
             var newRole = new ApplicationRole(request.Name, request.Description);
@@ -128,11 +126,11 @@ public class RoleService : IRoleService
             await _context.SaveChangesAsync();
             if (response.Succeeded)
             {
-                return await Result<string>.SuccessAsync(newRole.Id, string.Format(_localizer["Role {0} Created."], request.Name));
+                return await Result<string>.SuccessAsync(newRole.Id, string.Format("Role {0} Created.", request.Name));
             }
             else
             {
-                return await Result<string>.FailAsync(response.Errors.Select(e => _localizer[e.Description].ToString()).ToList());
+                return await Result<string>.FailAsync(response.Errors.Select(e => e.Description.ToString()).ToList());
             }
         }
         else
@@ -140,19 +138,19 @@ public class RoleService : IRoleService
             var existingRole = await _roleManager.FindByIdAsync(request.Id);
             if (existingRole == null)
             {
-                return await Result<string>.FailAsync(_localizer["Role does not exist."]);
+                return await Result<string>.FailAsync("Role does not exist.");
             }
 
             if (DefaultRoles.Contains(existingRole.Name))
             {
-                return await Result<string>.SuccessAsync(string.Format(_localizer["Not allowed to modify {0} Role."], existingRole.Name));
+                return await Result<string>.SuccessAsync(string.Format("Not allowed to modify {0} Role.", existingRole.Name));
             }
 
             existingRole.Name = request.Name;
             existingRole.NormalizedName = request.Name.ToUpper();
             existingRole.Description = request.Description;
             await _roleManager.UpdateAsync(existingRole);
-            return await Result<string>.SuccessAsync(existingRole.Id, string.Format(_localizer["Role {0} Updated."], existingRole.Name));
+            return await Result<string>.SuccessAsync(existingRole.Id, string.Format("Role {0} Updated.", existingRole.Name));
         }
     }
 
@@ -164,7 +162,7 @@ public class RoleService : IRoleService
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role == null)
             {
-                return await Result<string>.FailAsync(_localizer["Role does not exist."]);
+                return await Result<string>.FailAsync("Role does not exist.");
             }
 
             if (role.Name == RoleConstants.Admin)
@@ -172,7 +170,7 @@ public class RoleService : IRoleService
                 var currentUser = await _userManager.Users.SingleAsync(x => x.Id == _currentUser.GetUserId().ToString());
                 if (await _userManager.IsInRoleAsync(currentUser, RoleConstants.Admin))
                 {
-                    return await Result<string>.FailAsync(_localizer["Not allowed to modify Permissions for this Role."]);
+                    return await Result<string>.FailAsync("Not allowed to modify Permissions for this Role.");
                 }
             }
 
@@ -183,8 +181,7 @@ public class RoleService : IRoleService
                    || !selectedPermissions.Any(x => x.Permission == PermissionConstants.RoleClaims.View)
                    || !selectedPermissions.Any(x => x.Permission == PermissionConstants.RoleClaims.Edit))
                 {
-                    return await Result<string>.FailAsync(string.Format(
-                        _localizer["Not allowed to deselect {0} or {1} or {2} for this Role."],
+                    return await Result<string>.FailAsync(string.Format("Not allowed to deselect {0} or {1} or {2} for this Role.",
                         PermissionConstants.Roles.View,
                         PermissionConstants.RoleClaims.View,
                         PermissionConstants.RoleClaims.Edit));
@@ -204,7 +201,7 @@ public class RoleService : IRoleService
                     var addResult = await _roleManager.AddPermissionClaimAsync(role, permission.Permission);
                     if (!addResult.Succeeded)
                     {
-                        errors.AddRange(addResult.Errors.Select(e => _localizer[e.Description].ToString()));
+                        errors.AddRange(addResult.Errors.Select(e => e.Description.ToString()));
                     }
                 }
             }
@@ -236,7 +233,7 @@ public class RoleService : IRoleService
                 return await Result<string>.FailAsync(errors);
             }
 
-            return await Result<string>.SuccessAsync(_localizer["Permissions Updated."]);
+            return await Result<string>.SuccessAsync("Permissions Updated.");
         }
         catch (Exception ex)
         {

@@ -19,12 +19,10 @@ namespace BlazorApp.Infrastructure.Persistence;
 public class RepositoryAsync : IRepositoryAsync
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly IStringLocalizer<RepositoryAsync> _localizer;
 
-    public RepositoryAsync(ApplicationDbContext dbContext, IStringLocalizer<RepositoryAsync> localizer)
+    public RepositoryAsync(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-        _localizer = localizer;
     }
 
     // Get List
@@ -152,7 +150,7 @@ public class RepositoryAsync : IRepositoryAsync
         var dto = await getDto();
 
         return dto is null
-            ? throw new EntityNotFoundException(string.Format(_localizer["entity.notfound"], typeof(T).Name, entityId))
+            ? throw new EntityNotFoundException(string.Format("{0} {1} Not Found", typeof(T).Name, entityId))
             : dto;
     }
 
@@ -286,7 +284,7 @@ public class RepositoryAsync : IRepositoryAsync
 
         var existing = _dbContext.Set<T>().Find(entity.Id);
 
-        _ = existing ?? throw new EntityNotFoundException(string.Format(_localizer["entity.notfound"], typeof(T).Name, entity.Id));
+        _ = existing ?? throw new EntityNotFoundException(string.Format("{0} {1} Not Found", typeof(T).Name, entity.Id));
 
         _dbContext.Entry(existing).CurrentValues.SetValues(entity);
     }
@@ -303,7 +301,7 @@ public class RepositoryAsync : IRepositoryAsync
 
             var existing = _dbContext.Set<T>().Find(entity.Id);
 
-            _ = existing ?? throw new EntityNotFoundException(string.Format(_localizer["entity.notfound"], typeof(T).Name, entity.Id));
+            _ = existing ?? throw new EntityNotFoundException(string.Format("{0} {1} Not Found", typeof(T).Name, entity.Id));
 
             _dbContext.Entry(existing).CurrentValues.SetValues(entity);
         }
@@ -321,7 +319,7 @@ public class RepositoryAsync : IRepositoryAsync
     where T : BaseEntity
     {
         var entity = await _dbContext.Set<T>().FindAsync(new object?[] { entityId }, cancellationToken: cancellationToken);
-        _ = entity ?? throw new EntityNotFoundException(string.Format(_localizer["entity.notfound"], typeof(T).Name, entityId));
+        _ = entity ?? throw new EntityNotFoundException(string.Format("{0} {1} Not Found", typeof(T).Name, entityId));
 
         _dbContext.Set<T>().Remove(entity);
         return entity;

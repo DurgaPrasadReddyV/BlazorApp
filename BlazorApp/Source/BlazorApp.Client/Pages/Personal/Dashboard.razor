@@ -3,7 +3,8 @@
 
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Dashboard> _localizer
 
-<FshTitle Title="@_localizer["Dashboard"]" Description="@_localizer["Realtime Updates & Insights with SignalR."]" />
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-2">Dashboard</MudText>
+<MudText Color="Color.Surface" Class="mb-4">Realtime Updates & Insights with SignalR.</MudText>
 
 @if (!_loaded)
 {

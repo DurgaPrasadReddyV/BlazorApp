@@ -1,6 +1,5 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
-
 @using BlazorApp.Client.Infrastructure.Authentication.Jwt
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components
@@ -15,17 +14,13 @@
 @using Microsoft.Extensions.DependencyInjection
 @using Microsoft.Extensions.Localization
 @using Microsoft.JSInterop
-
 @using MudBlazor
 @using Blazored.LocalStorage
-
 @using BlazorApp.Client
 @using BlazorApp.Client.Shared
 @using BlazorApp.Client.Pages.Authentication
-@using BlazorApp.Client.Shared.Components
 @using BlazorApp.Client.Components.ErrorHandler
 @using BlazorApp.Client.Components.Notifications
-@using BlazorApp.Client.Components.ThemeManager
 @using BlazorApp.Client.Infrastructure.ApiClient
 @using BlazorApp.Client.Infrastructure.Authentication
 @using BlazorApp.Client.Infrastructure.Preferences
@@ -36,7 +31,5 @@
 @inject NavigationManager _navigationManager
 @inject ISnackbar _snackBar
 @inject IDialogService _dialogService
-@inject IConfiguration _configurations;
-
 @inject IClientPreferenceManager _clientPreferenceManager
-@inject ILocalStorageService _localStorage;
+@inject ILocalStorageService _localStorage

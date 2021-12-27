@@ -26,20 +26,17 @@ public class IdentityService : IIdentityService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly IStringLocalizer<IdentityService> _localizer;
     private readonly IFileStorageService _fileStorage;
 
     public IdentityService(
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
-        IStringLocalizer<IdentityService> localizer,
         IFileStorageService fileStorage)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _roleManager = roleManager;
-        _localizer = localizer;
         _fileStorage = fileStorage;
     }
 
@@ -48,7 +45,7 @@ public class IdentityService : IIdentityService
         string? objectId = principal.GetObjectId();
         if (string.IsNullOrWhiteSpace(objectId))
         {
-            throw new IdentityException(_localizer["Invalid objectId"]);
+            throw new IdentityException("Invalid objectId");
         }
 
         var user = await _userManager.Users.Where(u => u.ObjectId == objectId).FirstOrDefaultAsync();
@@ -74,13 +71,13 @@ public class IdentityService : IIdentityService
         string? username = principal.GetDisplayName();
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username))
         {
-            throw new IdentityException(string.Format(_localizer["Username or Email not valid."]));
+            throw new IdentityException(string.Format("Username or Email not valid."));
         }
 
         var user = await _userManager.FindByNameAsync(username);
         if (user is not null && !string.IsNullOrWhiteSpace(user.ObjectId))
         {
-            throw new IdentityException(string.Format(_localizer["Username {0} is already taken."], username));
+            throw new IdentityException(string.Format("Username {0} is already taken.", username));
         }
 
         if (user is null)
@@ -88,7 +85,7 @@ public class IdentityService : IIdentityService
             user = await _userManager.FindByEmailAsync(email);
             if (user is not null && !string.IsNullOrWhiteSpace(user.ObjectId))
             {
-                throw new IdentityException(string.Format(_localizer["Email {0} is already taken."], email));
+                throw new IdentityException(string.Format("Email {0} is already taken.", email));
             }
         }
 
@@ -118,7 +115,7 @@ public class IdentityService : IIdentityService
 
         if (!result.Succeeded)
         {
-            throw new IdentityException(_localizer["Validation Errors Occurred."], result.Errors.Select(a => _localizer[a.Description].ToString()).ToList());
+            throw new IdentityException("Validation Errors Occurred.", result.Errors.Select(a => a.Description.ToString()).ToList());
         }
 
         return user;
@@ -130,7 +127,7 @@ public class IdentityService : IIdentityService
         var userWithSameUserName = await _userManager.FindByNameAsync(request.UserName);
         if (userWithSameUserName != null)
         {
-            throw new IdentityException(string.Format(_localizer["Username {0} is already taken."], request.UserName));
+            throw new IdentityException(string.Format("Username {0} is already taken.", request.UserName));
         }
 
         var user = new ApplicationUser
@@ -148,24 +145,24 @@ public class IdentityService : IIdentityService
             var userWithSamePhoneNumber = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
             if (userWithSamePhoneNumber != null)
             {
-                throw new IdentityException(string.Format(_localizer["Phone number {0} is already registered."], request.PhoneNumber));
+                throw new IdentityException(string.Format("Phone number {0} is already registered.", request.PhoneNumber));
             }
         }
 
         if (await _userManager.FindByEmailAsync(request.Email?.Normalize()) is not null)
         {
-            throw new IdentityException(string.Format(_localizer["Email {0} is already registered."], request.Email));
+            throw new IdentityException(string.Format("Email {0} is already registered.", request.Email));
         }
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
-            throw new IdentityException(_localizer["Validation Errors Occurred."], result.Errors.Select(a => _localizer[a.Description].ToString()).ToList());
+            throw new IdentityException("Validation Errors Occurred.", result.Errors.Select(a => a.Description.ToString()).ToList());
         }
 
         await _userManager.AddToRoleAsync(user, RoleConstants.Basic);
 
-        var messages = new List<string> { string.Format(_localizer["User {0} Registered."], user.UserName) };
+        var messages = new List<string> { string.Format("User {0} Registered.", user.UserName) };
 
         return await Result<string>.SuccessAsync(user.Id, messages: messages);
     }
@@ -175,18 +172,18 @@ public class IdentityService : IIdentityService
         var user = await _userManager.Users.IgnoreQueryFilters().Where(a => a.Id == userId && !a.EmailConfirmed).FirstOrDefaultAsync();
         if (user == null)
         {
-            throw new IdentityException(_localizer["An error occurred while confirming E-Mail."]);
+            throw new IdentityException("An error occurred while confirming E-Mail.");
         }
 
         code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
         var result = await _userManager.ConfirmEmailAsync(user, code);
         if (result.Succeeded)
         {
-            return await Result<string>.SuccessAsync(user.Id, string.Format(_localizer["Account Confirmed for E-Mail {0}. You can now use the /api/identity/token endpoint to generate JWT."], user.Email));
+            return await Result<string>.SuccessAsync(user.Id, string.Format("Account Confirmed for E-Mail {0}. You can now use the /api/identity/token endpoint to generate JWT.", user.Email));
         }
         else
         {
-            throw new IdentityException(string.Format(_localizer["An error occurred while confirming {0}"], user.Email));
+            throw new IdentityException(string.Format("An error occurred while confirming {0}", user.Email));
         }
     }
 
@@ -195,7 +192,7 @@ public class IdentityService : IIdentityService
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            throw new IdentityException(_localizer["An error occurred while confirming Mobile Phone."]);
+            throw new IdentityException("An error occurred while confirming Mobile Phone.");
         }
 
         var result = await _userManager.ChangePhoneNumberAsync(user, user.PhoneNumber, code);
@@ -203,16 +200,16 @@ public class IdentityService : IIdentityService
         {
             if (user.EmailConfirmed)
             {
-                return await Result<string>.SuccessAsync(user.Id, string.Format(_localizer["Account Confirmed for Phone Number {0}. You can now use the /api/identity/token endpoint to generate JWT."], user.PhoneNumber));
+                return await Result<string>.SuccessAsync(user.Id, string.Format("Account Confirmed for Phone Number {0}. You can now use the /api/identity/token endpoint to generate JWT.", user.PhoneNumber));
             }
             else
             {
-                return await Result<string>.SuccessAsync(user.Id, string.Format(_localizer["Account Confirmed for Phone Number {0}. You should confirm your E-mail before using the /api/identity/token endpoint to generate JWT."], user.PhoneNumber));
+                return await Result<string>.SuccessAsync(user.Id, string.Format("Account Confirmed for Phone Number {0}. You should confirm your E-mail before using the /api/identity/token endpoint to generate JWT.", user.PhoneNumber));
             }
         }
         else
         {
-            throw new IdentityException(string.Format(_localizer["An error occurred while confirming {0}"], user.PhoneNumber));
+            throw new IdentityException(string.Format("An error occurred while confirming {0}", user.PhoneNumber));
         }
     }
 
@@ -220,14 +217,14 @@ public class IdentityService : IIdentityService
     {
         if (string.IsNullOrEmpty(request.Email))
         {
-            throw new IdentityException(_localizer["Email is required."], statusCode: HttpStatusCode.BadRequest);
+            throw new IdentityException("Email is required.", statusCode: HttpStatusCode.BadRequest);
         }
 
         var user = await _userManager.FindByEmailAsync(request.Email.Normalize());
         if (user is null || !await _userManager.IsEmailConfirmedAsync(user))
         {
             // Don't reveal that the user does not exist or is not confirmed
-            throw new IdentityException(_localizer["An Error has occurred!"]);
+            throw new IdentityException("An Error has occurred!");
         }
 
         string code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -236,9 +233,9 @@ public class IdentityService : IIdentityService
         string passwordResetUrl = QueryHelpers.AddQueryString(endpointUri.ToString(), "Token", code);
         var mailRequest = new MailRequest(
             new List<string> { request.Email },
-            _localizer["Reset Password"],
-            _localizer[$"Your Password Reset Token is '{code}'. You can reset your password using the {endpointUri} Endpoint."]);
-        return await Result.SuccessAsync(_localizer["Password Reset Mail has been sent to your authorized Email."]);
+            "Reset Password",
+            $"Your Password Reset Token is '{code}'. You can reset your password using the {endpointUri} Endpoint.");
+        return await Result.SuccessAsync("Password Reset Mail has been sent to your authorized Email.");
     }
 
     public async Task<IResult> ResetPasswordAsync(ResetPasswordRequest request)
@@ -247,17 +244,17 @@ public class IdentityService : IIdentityService
         if (user == null)
         {
             // Don't reveal that the user does not exist
-            throw new IdentityException(_localizer["An Error has occurred!"]);
+            throw new IdentityException("An Error has occurred!");
         }
 
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
         if (result.Succeeded)
         {
-            return await Result.SuccessAsync(_localizer["Password Reset Successful!"]);
+            return await Result.SuccessAsync("Password Reset Successful!");
         }
         else
         {
-            throw new IdentityException(_localizer["An Error has occurred!"]);
+            throw new IdentityException("An Error has occurred!");
         }
     }
 
@@ -268,7 +265,7 @@ public class IdentityService : IIdentityService
             var userWithSamePhoneNumber = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber && x.Id != userId);
             if (userWithSamePhoneNumber != null)
             {
-                return await Result.FailAsync(string.Format(_localizer["Phone number {0} is already used."], request.PhoneNumber));
+                return await Result.FailAsync(string.Format("Phone number {0} is already used.", request.PhoneNumber));
             }
         }
 
@@ -278,7 +275,7 @@ public class IdentityService : IIdentityService
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return await Result.FailAsync(_localizer["User Not Found."]);
+                return await Result.FailAsync("User Not Found.");
             }
 
             if (request.Image != null)
@@ -296,13 +293,13 @@ public class IdentityService : IIdentityService
             }
 
             var identityResult = await _userManager.UpdateAsync(user);
-            var errors = identityResult.Errors.Select(e => _localizer[e.Description].ToString()).ToList();
+            var errors = identityResult.Errors.Select(e => e.Description.ToString()).ToList();
             await _signInManager.RefreshSignInAsync(user);
             return identityResult.Succeeded ? await Result.SuccessAsync() : await Result.FailAsync(errors);
         }
         else
         {
-            return await Result.FailAsync(string.Format(_localizer["Email {0} is already used."], request.Email));
+            return await Result.FailAsync(string.Format("Email {0} is already used.", request.Email));
         }
     }
 
@@ -311,14 +308,14 @@ public class IdentityService : IIdentityService
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            return await Result.FailAsync(_localizer["User Not Found."]);
+            return await Result.FailAsync("User Not Found.");
         }
 
         var identityResult = await _userManager.ChangePasswordAsync(
             user,
             model.Password,
             model.NewPassword);
-        var errors = identityResult.Errors.Select(e => _localizer[e.Description].ToString()).ToList();
+        var errors = identityResult.Errors.Select(e => e.Description.ToString()).ToList();
         return identityResult.Succeeded ? await Result.SuccessAsync() : await Result.FailAsync(errors);
     }
 

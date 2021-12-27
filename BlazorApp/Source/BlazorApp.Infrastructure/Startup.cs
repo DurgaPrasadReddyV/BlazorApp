@@ -1,7 +1,6 @@
 using BlazorApp.Infrastructure.Common;
 using BlazorApp.Infrastructure.FileStorage;
 using BlazorApp.Infrastructure.Identity;
-using BlazorApp.Infrastructure.Localization;
 using BlazorApp.Infrastructure.Mapping;
 using BlazorApp.Infrastructure.Middleware;
 using BlazorApp.Infrastructure.Notifications;
@@ -24,7 +23,6 @@ public static class Startup
             .AddApiVersioning()
             .AddCurrentUser()
             .AddIdentity(config)
-            .AddLocalization(config)
             .AddNotifications()
             .AddPermissions()
             .AddRequestLogging()
@@ -37,10 +35,8 @@ public static class Startup
 
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder appBuilder, IConfiguration config) =>
         appBuilder
-            .UseLocalization(config)
             .UseStaticFiles()
             .UseFileStorage()
-            .UseLocalization(config)
             .UseRouting()
             .UseAuthentication()
             .UseCurrentUser()

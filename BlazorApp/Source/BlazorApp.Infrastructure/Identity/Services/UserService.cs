@@ -19,19 +19,15 @@ public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly IStringLocalizer<UserService> _localizer;
-
     private readonly ApplicationDbContext _context;
 
     public UserService(
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
-        IStringLocalizer<UserService> localizer,
         ApplicationDbContext context)
     {
         _userManager = userManager;
         _roleManager = roleManager;
-        _localizer = localizer;
         _context = context;
     }
 
@@ -61,7 +57,7 @@ public class UserService : IUserService
         var user = await _userManager.Users.AsNoTracking().Where(u => u.Id == userId).FirstOrDefaultAsync();
         if (user is null)
         {
-            return await Result<UserDetailsDto>.FailAsync(_localizer["User Not Found."]);
+            return await Result<UserDetailsDto>.FailAsync("User Not Found.");
         }
 
         var result = user.Adapt<UserDetailsDto>();
@@ -94,12 +90,12 @@ public class UserService : IUserService
         var user = await _userManager.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
         if (user == null)
         {
-            return await Result<string>.FailAsync(_localizer["User Not Found."]);
+            return await Result<string>.FailAsync("User Not Found.");
         }
 
         if (await _userManager.IsInRoleAsync(user, RoleConstants.Admin))
         {
-            return await Result<string>.FailAsync(_localizer["Not Allowed."]);
+            return await Result<string>.FailAsync("Not Allowed.");
         }
 
         foreach (var userRole in request.UserRoles)
@@ -121,7 +117,7 @@ public class UserService : IUserService
             }
         }
 
-        return await Result<string>.SuccessAsync(userId, string.Format(_localizer["User Roles Updated Successfully."]));
+        return await Result<string>.SuccessAsync(userId, string.Format("User Roles Updated Successfully."));
     }
 
     public async Task<Result<List<PermissionDto>>> GetPermissionsAsync(string userId)
@@ -130,7 +126,7 @@ public class UserService : IUserService
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            return await Result<List<PermissionDto>>.FailAsync(_localizer["User Not Found."]);
+            return await Result<List<PermissionDto>>.FailAsync("User Not Found.");
         }
 
         var roleNames = await _userManager.GetRolesAsync(user);

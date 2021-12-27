@@ -50,9 +50,7 @@
 {
     private MudTheme _currentTheme = new LightTheme();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _currentTheme = new LightTheme();
-        _currentTheme = await _clientPreferenceManager.GetCurrentThemeAsync();
     }
 }
