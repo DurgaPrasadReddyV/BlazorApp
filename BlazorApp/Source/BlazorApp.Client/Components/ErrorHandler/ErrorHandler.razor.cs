@@ -1,4 +1,4 @@
-﻿using BlazorApp.Client.Infrastructure.Authentication;
+﻿using BlazorApp.Client.Authentication;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 

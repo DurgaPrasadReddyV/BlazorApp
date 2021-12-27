@@ -1,5 +1,5 @@
-﻿using BlazorApp.Client.Infrastructure.Preferences;
-using BlazorApp.Client.Infrastructure.Theme;
+﻿using BlazorApp.Client.Preferences;
+using BlazorApp.Client.Theme;
 using MudBlazor;
 
 namespace BlazorApp.Client.Shared;

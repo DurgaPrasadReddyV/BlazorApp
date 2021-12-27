@@ -1,6 +1,5 @@
-﻿namespace BlazorApp.Client.Infrastructure.Preferences;
+﻿namespace BlazorApp.Client.Preferences;
 
 public interface IPreference
 {
-    // public string LanguageCode { get; set; }
 }

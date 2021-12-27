@@ -1,6 +1,6 @@
 ﻿using MudBlazor;
 
-namespace BlazorApp.Client.Infrastructure.Theme;
+namespace BlazorApp.Client.Theme;
 
 public static class CustomColors
 {

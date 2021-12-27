@@ -1,6 +1,6 @@
-using BlazorApp.Client.Infrastructure.ApiClient;
+using BlazorApp.Client.ApiClient;
 
-namespace BlazorApp.Client.Infrastructure.Authentication;
+namespace BlazorApp.Client.Authentication;
 
 public interface IAuthenticationService
 {

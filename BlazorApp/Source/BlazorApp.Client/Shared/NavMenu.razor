@@ -1,11 +1,10 @@
-﻿@using System.Security.Claims
-<PersonCard Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text); margin-bottom:0px!important" />
+﻿<PersonCard Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text); margin-bottom:0px!important" />
 <MudNavMenu>
     <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">Home</MudText>
     <MudNavLink Href="/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Dashboard</MudNavLink>
-    <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">Personal</MudText>
-    <MudNavLink Href="/account" Icon="@Icons.Material.Outlined.Person">Account</MudNavLink>
     <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">Administration</MudText>
     <MudNavLink Href="/users" Icon="@Icons.Material.Outlined.PeopleAlt">Users</MudNavLink>
     <MudNavLink Href="/roles" Icon="@Icons.Material.Outlined.EmojiPeople">Roles</MudNavLink>
+    <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">Personal</MudText>
+    <MudNavLink Href="/account" Icon="@Icons.Material.Outlined.Person">Account</MudNavLink>
 </MudNavMenu>

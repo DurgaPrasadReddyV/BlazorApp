@@ -1,9 +1,9 @@
-﻿using BlazorApp.Client.Infrastructure.Authentication.Jwt;
+﻿using BlazorApp.Client.Authentication.Jwt;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorApp.Client.Infrastructure.Authentication;
+namespace BlazorApp.Client.Authentication;
 
 internal static class Startup
 {

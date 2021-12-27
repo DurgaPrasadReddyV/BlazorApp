@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace BlazorApp.Client.Infrastructure.Authorization;
+namespace BlazorApp.Client.Authorization;
 
 public class FSHPermissions
 {

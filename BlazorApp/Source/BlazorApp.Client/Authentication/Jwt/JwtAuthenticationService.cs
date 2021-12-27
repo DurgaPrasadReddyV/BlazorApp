@@ -1,9 +1,9 @@
-﻿using BlazorApp.Client.Infrastructure.ApiClient;
-using BlazorApp.Client.Infrastructure.Authorization;
+﻿using BlazorApp.Client.ApiClient;
+using BlazorApp.Client.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
-namespace BlazorApp.Client.Infrastructure.Authentication.Jwt;
+namespace BlazorApp.Client.Authentication.Jwt;
 
 public class JwtAuthenticationService : AuthenticationStateProvider, IAuthenticationService, IAccessTokenProvider
 {

@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Client.Infrastructure.Preferences;
+﻿namespace BlazorApp.Client.Preferences;
 
 public class ClientPreferenceManager : IClientPreferenceManager
 {

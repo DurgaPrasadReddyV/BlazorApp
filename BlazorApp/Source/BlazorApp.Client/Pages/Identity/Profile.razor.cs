@@ -1,7 +1,7 @@
-﻿using BlazorApp.Client.Infrastructure.ApiClient;
-using BlazorApp.Client.Infrastructure.Authentication;
-using BlazorApp.Client.Infrastructure.Common;
-using BlazorApp.Client.Infrastructure.Authorization;
+﻿using BlazorApp.Client.ApiClient;
+using BlazorApp.Client.Authentication;
+using BlazorApp.Client.Common;
+using BlazorApp.Client.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;

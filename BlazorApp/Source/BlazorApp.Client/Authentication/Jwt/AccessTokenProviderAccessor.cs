@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorApp.Client.Infrastructure.Authentication.Jwt;
+namespace BlazorApp.Client.Authentication.Jwt;
 
 internal class AccessTokenProviderAccessor : IAccessTokenProviderAccessor
 {

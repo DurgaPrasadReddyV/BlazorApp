@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Client.Infrastructure.Dashboard;
+﻿namespace BlazorApp.Client.Dashboard;
 
 public class StatsChangedNotification
 {

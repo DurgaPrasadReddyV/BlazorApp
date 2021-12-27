@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Client.Infrastructure.Common;
+﻿namespace BlazorApp.Client.Common;
 
 public static class StorageConstants
 {

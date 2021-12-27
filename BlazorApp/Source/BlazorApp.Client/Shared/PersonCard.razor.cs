@@ -1,5 +1,5 @@
-﻿using BlazorApp.Client.Infrastructure.Common;
-using BlazorApp.Client.Infrastructure.Authorization;
+﻿using BlazorApp.Client.Common;
+using BlazorApp.Client.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 

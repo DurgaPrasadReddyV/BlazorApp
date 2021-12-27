@@ -1,5 +1,5 @@
-﻿using BlazorApp.Client.Infrastructure.ApiClient;
-using BlazorApp.Client.Infrastructure.Dashboard;
+﻿using BlazorApp.Client.ApiClient;
+using BlazorApp.Client.Dashboard;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;

@@ -1,5 +1,5 @@
-﻿using BlazorApp.Client.Infrastructure.Notifications;
-using BlazorApp.Client.Infrastructure.Preferences;
+﻿using BlazorApp.Client.Notifications;
+using BlazorApp.Client.Preferences;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 

@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Client.Infrastructure.Notifications;
+﻿namespace BlazorApp.Client.Notifications;
 
 public enum ConnectionState
 {

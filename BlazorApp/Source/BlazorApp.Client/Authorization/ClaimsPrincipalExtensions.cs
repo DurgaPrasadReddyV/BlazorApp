@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace BlazorApp.Client.Infrastructure.Authorization;
+namespace BlazorApp.Client.Authorization;
 
 public static class ClaimsPrincipalExtensions
 {

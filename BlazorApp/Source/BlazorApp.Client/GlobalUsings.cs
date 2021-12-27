@@ -2,6 +2,6 @@
 global using System.Security.Claims;
 global using System.Text.Json;
 global using Blazored.LocalStorage;
-global using BlazorApp.Client.Infrastructure.Common;
+global using BlazorApp.Client.Common;
 global using Microsoft.AspNetCore.Components.Authorization;
 global using Microsoft.Extensions.Configuration;

@@ -1,4 +1,4 @@
-namespace BlazorApp.Client.Infrastructure.ApiClient;
+namespace BlazorApp.Client.ApiClient;
 
 public interface IApiService
 {

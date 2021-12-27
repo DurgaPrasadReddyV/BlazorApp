@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
-namespace BlazorApp.Client.Infrastructure.Common;
+namespace BlazorApp.Client.Common;
 
 internal static class AccessTokenProviderExtensions
 {

@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Client.Infrastructure.Common;
+﻿namespace BlazorApp.Client.Common;
 
 public record LanguageCode(string Code, string DisplayName, bool IsRTL = false);
 

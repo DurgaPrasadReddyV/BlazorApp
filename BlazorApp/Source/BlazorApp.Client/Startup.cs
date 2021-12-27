@@ -1,10 +1,10 @@
 ﻿using System.Globalization;
 using System.Reflection;
-using BlazorApp.Client.Infrastructure.ApiClient;
-using BlazorApp.Client.Infrastructure.Authentication;
-using BlazorApp.Client.Infrastructure.Notifications;
-using BlazorApp.Client.Infrastructure.Preferences;
-using BlazorApp.Client.Infrastructure.Authorization;
+using BlazorApp.Client.ApiClient;
+using BlazorApp.Client.Authentication;
+using BlazorApp.Client.Notifications;
+using BlazorApp.Client.Preferences;
+using BlazorApp.Client.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
 
-namespace BlazorApp.Client.Infrastructure;
+namespace BlazorApp.Client;
 
 public static class Startup
 {

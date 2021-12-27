@@ -1,5 +1,5 @@
-﻿using BlazorApp.Client.Infrastructure.ApiClient;
-using BlazorApp.Client.Infrastructure.Authentication;
+﻿using BlazorApp.Client.ApiClient;
+using BlazorApp.Client.Authentication;
 using BlazorApp.Client.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;

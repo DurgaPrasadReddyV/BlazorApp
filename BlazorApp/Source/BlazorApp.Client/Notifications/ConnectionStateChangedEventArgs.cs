@@ -1,3 +1,3 @@
-﻿namespace BlazorApp.Client.Infrastructure.Notifications;
+﻿namespace BlazorApp.Client.Notifications;
 
 public record ConnectionStateChangedEventArgs(ConnectionState State, string? Message);

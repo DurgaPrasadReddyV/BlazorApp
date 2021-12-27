@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
 
-namespace BlazorApp.Client.Infrastructure.Authentication.Jwt;
+namespace BlazorApp.Client.Authentication.Jwt;
 
 public class JwtAuthenticationHeaderHandler : DelegatingHandler
 {
