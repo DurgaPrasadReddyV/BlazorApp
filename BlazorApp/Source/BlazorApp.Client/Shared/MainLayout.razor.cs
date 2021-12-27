@@ -17,7 +17,7 @@ public partial class MainLayout
 
     protected override async Task OnInitializedAsync()
     {
-        await Notifications.TryConnectAsync();
+        Notifications.TryConnectAsync();
 
         if (await _clientPreferenceManager.GetPreference() is ClientPreference preference)
         {

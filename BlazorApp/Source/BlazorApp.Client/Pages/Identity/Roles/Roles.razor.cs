@@ -12,16 +12,13 @@ public partial class Roles
     private List<RoleDto> _roleList = new();
     private RoleDto _role = new();
     private string _searchString = string.Empty;
-    private bool _dense = false;
-    private bool _striped = true;
-    private bool _bordered = false;
 
     private bool _canCreateRoles;
-
     private bool _canEditRoles;
     private bool _canDeleteRoles;
     private bool _canSearchRoles;
     private bool _canViewRoleClaims;
+
     private bool _loading = true;
 
     public bool checkBox { get; set; } = true;

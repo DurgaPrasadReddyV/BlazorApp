@@ -1,5 +1,5 @@
 ﻿using BlazorApp.Client.Infrastructure.ApiClient;
-using BlazorApp.Client.Shared.Authorization;
+using BlazorApp.Client.Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -12,16 +12,16 @@ public partial class Users
 {
     [Inject]
     private IUsersClient _usersClient { get; set; } = default!;
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
+
     [Inject]
     protected IAuthorizationService AuthService { get; set; } = default!;
+
     private IEnumerable<UserDetailsDto>? _userList;
     private UserDetailsDto _user = new();
     private string _searchString = string.Empty;
-    private bool _dense = false;
-    private bool _striped = true;
-    private bool _bordered = false;
 
     private ClaimsPrincipal _currentUser;
     private bool _canCreateUsers;
@@ -94,7 +94,7 @@ public partial class Users
     {
         var parameters = new DialogParameters();
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = _dialogService.Show<RegisterUserModal>(_localizer["Register"], parameters, options);
+        var dialog = _dialogService.Show<RegisterUserModal>("Register", parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

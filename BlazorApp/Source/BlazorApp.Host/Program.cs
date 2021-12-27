@@ -1,5 +1,5 @@
 using BlazorApp.Application;
-using BlazorApp.Infrastructure;
+using BlazorApp.CommonInfrastructure;
 using FluentValidation.AspNetCore;
 using Serilog;
 

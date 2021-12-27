@@ -20,8 +20,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorApp.Application\BlazorApp.Application.csproj" />
 		<ProjectReference Include="..\BlazorApp.Client\BlazorApp.Client.csproj" />
+		<ProjectReference Include="..\BlazorApp.CommonInfrastructure\BlazorApp.CommonInfrastructure.csproj" />
 		<ProjectReference Include="..\BlazorApp.Domain\BlazorApp.Domain.csproj" />
-		<ProjectReference Include="..\BlazorApp.Infrastructure\BlazorApp.Infrastructure.csproj" />
 		<ProjectReference Include="..\BlazorApp.Shared\BlazorApp.Shared.csproj" />
 	</ItemGroup>
 	<ItemGroup>

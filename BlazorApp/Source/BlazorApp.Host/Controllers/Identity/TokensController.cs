@@ -1,7 +1,7 @@
 using BlazorApp.Application.Identity.Interfaces;
 using BlazorApp.Application.Wrapper;
 using BlazorApp.Domain.Identity;
-using BlazorApp.Infrastructure.Swagger;
+using BlazorApp.CommonInfrastructure.Swagger;
 using BlazorApp.Shared.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

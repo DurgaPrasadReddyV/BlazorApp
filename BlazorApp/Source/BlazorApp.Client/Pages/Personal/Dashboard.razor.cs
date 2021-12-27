@@ -1,5 +1,5 @@
 ﻿using BlazorApp.Client.Infrastructure.ApiClient;
-using BlazorApp.Client.Shared.Dashboard;
+using BlazorApp.Client.Infrastructure.Dashboard;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
@@ -13,12 +13,6 @@ public partial class Dashboard
 
     [Inject]
     private HubConnection HubConnection { get; set; } = default!;
-
-    [Parameter]
-    public int ProductCount { get; set; }
-
-    [Parameter]
-    public int BrandCount { get; set; }
 
     [Parameter]
     public int UserCount { get; set; }
@@ -46,8 +40,6 @@ public partial class Dashboard
         {
             if (response.Data is not null)
             {
-                ProductCount = response.Data.ProductCount;
-                BrandCount = response.Data.BrandCount;
                 UserCount = response.Data.UserCount;
                 RoleCount = response.Data.RoleCount;
             }
