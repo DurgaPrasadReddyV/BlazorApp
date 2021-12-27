@@ -4,7 +4,7 @@ using BlazorApp.Shared.Identity;
 
 namespace BlazorApp.Application.Identity.Interfaces;
 
-public interface ITokenService : ITransientService
+public interface ITokenService
 {
     Task<IResult<TokenResponse>> GetTokenAsync(TokenRequest request, string ipAddress);
 

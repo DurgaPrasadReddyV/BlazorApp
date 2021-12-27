@@ -2,7 +2,6 @@
 @attribute [Authorize(Policy = FSHPermissions.Dashboard.View)]
 
 <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-2">Dashboard</MudText>
-<MudText Color="Color.Surface" Class="mb-4">Realtime Updates & Insights with SignalR.</MudText>
 
 @if (!_loaded)
 {
@@ -14,7 +13,7 @@ else
         <MudItem xs="12" sm="6" md="3">
             <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
                 <MudIcon Icon="@Icons.Material.Filled.Face" Color="Color.Success" Class="mx-4"
-                Style="width:54px; height:54px;"></MudIcon>
+                     Style="width:54px; height:54px;"></MudIcon>
                 <div>
                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Registered Users"</MudText>
                     <MudText Typo="Typo.h5">@UserCount</MudText>
@@ -24,7 +23,7 @@ else
         <MudItem xs="12" sm="6" md="3">
             <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
                 <MudIcon Icon="@Icons.Material.Filled.Groups" Color="Color.Warning" Class="mx-4"
-                Style="width:54px; height:54px;"></MudIcon>
+                     Style="width:54px; height:54px;"></MudIcon>
                 <div>
                     <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Registered Roles"</MudText>
                     <MudText Typo="Typo.h5">@RoleCount</MudText>

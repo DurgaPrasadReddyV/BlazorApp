@@ -1,5 +1,6 @@
 using BlazorApp.Application;
 using BlazorApp.CommonInfrastructure;
+using BlazorApp.CommonInfrastructure.Middleware;
 using FluentValidation.AspNetCore;
 using Serilog;
 
@@ -23,14 +24,28 @@ try
     });
 
     builder.Services.AddApplication();
-    builder.Services.AddInfrastructure(builder.Configuration);
-    builder.Services.AddControllersWithViews().AddFluentValidation();
+    builder.Services.AddCommonInfrastructure(builder.Configuration);
+    builder.Services.AddIdentityInfrastructure(builder.Configuration);
+    builder.Services.AddHttpApiInfrastructure(builder.Configuration);
+    
     builder.Services.AddRazorPages();
 
     var app = builder.Build();
 
     app.UseBlazorFrameworkFiles();
-    app.UseInfrastructure(builder.Configuration);
+    app.UseStaticFiles();
+    app.UseFileStorage();
+    app.UseRouting();
+    app.UseAuthentication();
+    app.UseCurrentUser();
+    app.UseAuthorization();
+    app.UseRequestLogging();
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers().RequireAuthorization();
+        endpoints.MapNotifications();
+    });
+
     app.MapFallbackToFile("index.html");
 
     app.Run();

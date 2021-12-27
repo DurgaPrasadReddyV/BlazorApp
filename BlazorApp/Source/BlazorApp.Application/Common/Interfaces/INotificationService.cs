@@ -2,7 +2,7 @@
 
 namespace BlazorApp.Application.Common.Interfaces;
 
-public interface INotificationService : ITransientService
+public interface INotificationService
 {
     Task BroadcastExceptMessageAsync(INotificationMessage notification, IEnumerable<string> excludedConnectionIds);
 

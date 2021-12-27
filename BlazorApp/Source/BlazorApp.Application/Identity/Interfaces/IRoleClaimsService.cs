@@ -4,7 +4,7 @@ using BlazorApp.Shared.Identity;
 
 namespace BlazorApp.Application.Identity.Interfaces;
 
-public interface IRoleClaimsService : ITransientService
+public interface IRoleClaimsService
 {
     public Task<bool> HasPermissionAsync(string userId, string permission);
 

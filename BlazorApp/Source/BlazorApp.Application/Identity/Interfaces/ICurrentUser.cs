@@ -3,7 +3,7 @@ using BlazorApp.Application.Common.Interfaces;
 
 namespace BlazorApp.Application.Identity.Interfaces;
 
-public interface ICurrentUser : IScopedService
+public interface ICurrentUser
 {
     string? Name { get; }
 

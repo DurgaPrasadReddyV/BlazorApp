@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
@@ -18,8 +18,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\BlazorApp.ApiInfrastructure\BlazorApp.ApiInfrastructure.csproj" />
 		<ProjectReference Include="..\BlazorApp.Client\BlazorApp.Client.csproj" />
 		<ProjectReference Include="..\BlazorApp.CommonInfrastructure\BlazorApp.CommonInfrastructure.csproj" />
+		<ProjectReference Include="..\BlazorApp.IdentityInfrastructure\BlazorApp.IdentityInfrastructure.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

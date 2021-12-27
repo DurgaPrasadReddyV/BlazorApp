@@ -4,7 +4,7 @@ using BlazorApp.Shared.Identity;
 
 namespace BlazorApp.Application.Identity.Interfaces;
 
-public interface IUserService : ITransientService
+public interface IUserService
 {
     Task<PaginatedResult<UserDetailsDto>> SearchAsync(UserListFilter filter);
 

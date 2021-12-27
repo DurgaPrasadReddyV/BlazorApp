@@ -5,7 +5,7 @@ using BlazorApp.Shared.Identity;
 
 namespace BlazorApp.Application.Identity.Interfaces;
 
-public interface IIdentityService : ITransientService
+public interface IIdentityService
 {
     Task<string> GetOrCreateFromPrincipalAsync(ClaimsPrincipal principal);
 

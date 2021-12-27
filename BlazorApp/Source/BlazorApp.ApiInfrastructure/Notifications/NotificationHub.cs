@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace BlazorApp.CommonInfrastructure.Notifications;
 
 [Authorize]
-public class NotificationHub : Hub, ITransientService
+public class NotificationHub : Hub
 {
     private readonly ILogger<NotificationHub> _logger;
 

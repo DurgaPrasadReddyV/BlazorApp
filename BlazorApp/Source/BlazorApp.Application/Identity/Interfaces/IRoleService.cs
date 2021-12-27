@@ -4,7 +4,7 @@ using BlazorApp.Shared.Identity;
 
 namespace BlazorApp.Application.Identity.Interfaces;
 
-public interface IRoleService : ITransientService
+public interface IRoleService
 {
     Task<Result<List<RoleDto>>> GetListAsync();
 

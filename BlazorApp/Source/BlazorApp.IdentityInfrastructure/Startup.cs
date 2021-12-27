@@ -1,39 +1,43 @@
-using System.Net;
-using System.Security.Claims;
-using System.Text;
+using BlazorApp.Application.Common.Interfaces;
 using BlazorApp.Application.Identity.Exceptions;
+using BlazorApp.Application.Identity.Interfaces;
+using BlazorApp.CommonInfrastructure.Identity;
 using BlazorApp.CommonInfrastructure.Identity.Models;
 using BlazorApp.CommonInfrastructure.Identity.Permissions;
+using BlazorApp.CommonInfrastructure.Identity.Services;
+using BlazorApp.CommonInfrastructure.Mapping;
+using BlazorApp.CommonInfrastructure.Persistence;
 using BlazorApp.CommonInfrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
-using Serilog;
+using System.Net;
+using System.Security.Claims;
+using System.Text;
 
-namespace BlazorApp.CommonInfrastructure.Identity;
+namespace BlazorApp.CommonInfrastructure;
 
-internal static class Startup
+public static class Startup
 {
-    internal static IServiceCollection AddCurrentUser(this IServiceCollection services) =>
-        services.AddScoped<CurrentUserMiddleware>();
-
-    internal static IApplicationBuilder UseCurrentUser(this IApplicationBuilder app) =>
-        app.UseMiddleware<CurrentUserMiddleware>();
-
-    internal static IServiceCollection AddPermissions(this IServiceCollection services) =>
-        services
-            .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
-            .AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-
-    internal static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddIdentityInfrastructure(this IServiceCollection services, IConfiguration config)
     {
-        services
-            .AddIdentity<ApplicationUser, ApplicationRole>(options =>
+        MapsterSettings.Configure();
+        services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+        services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        services.AddScoped<ICurrentUser, CurrentUser>();
+        services.AddTransient<IIdentityService, IdentityService>();
+        services.AddTransient<IRoleClaimsService, RoleClaimsService>();
+        services.AddTransient<IRoleService, RoleService>();
+        services.AddTransient<ITokenService, TokenService>();
+        services.AddTransient<IUserService, UserService>();
+
+        services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 options.Password.RequiredLength = 6;
                 options.Password.RequireDigit = false;
@@ -45,13 +49,6 @@ internal static class Startup
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
-            services.AddJwtAuthentication(config);
-
-        return services;
-    }
-
-    private static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration config)
-    {
         services.Configure<JwtSettings>(config.GetSection($"SecuritySettings:{nameof(JwtSettings)}"));
         var jwtSettings = config.GetSection($"SecuritySettings:{nameof(JwtSettings)}").Get<JwtSettings>();
         if (string.IsNullOrEmpty(jwtSettings.Key))
@@ -105,6 +102,28 @@ internal static class Startup
                     }
                 };
             });
+
+        var dbSeederType = typeof(IDatabaseSeeder);
+        var dbSeeders = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(s => s.GetTypes())
+            .Where(p => dbSeederType.IsAssignableFrom(p))
+            .Where(t => t.IsClass && !t.IsAbstract)
+            .Select(t => new
+            {
+                Service = t.GetInterfaces().FirstOrDefault(),
+                Implementation = t
+            })
+            .Where(t => t.Service != null);
+
+        foreach (var dbSeeder in dbSeeders)
+        {
+            if (dbSeederType.IsAssignableFrom(dbSeeder.Service))
+            {
+                services.AddTransient(dbSeeder.Service, dbSeeder.Implementation);
+            }
+        }
+
+        services.AddDbContext<ApplicationDbContext>(m => m.UseSqlServer(config.GetConnectionString("DefaultConnection")));
         return services;
     }
 }

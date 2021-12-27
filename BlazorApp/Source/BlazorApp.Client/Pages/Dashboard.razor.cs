@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 
-namespace BlazorApp.Client.Pages.Personal;
+namespace BlazorApp.Client.Pages;
 
 public partial class Dashboard
 {
