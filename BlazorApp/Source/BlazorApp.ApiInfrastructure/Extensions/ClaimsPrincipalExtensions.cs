@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using BlazorApp.Domain.Identity;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Extensions;
 

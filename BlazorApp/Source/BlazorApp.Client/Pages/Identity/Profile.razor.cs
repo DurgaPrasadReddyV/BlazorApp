@@ -1,9 +1,7 @@
 ﻿using BlazorApp.Client.ApiClient;
 using BlazorApp.Client.Authentication;
-using BlazorApp.Client.Common;
 using BlazorApp.Client.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 

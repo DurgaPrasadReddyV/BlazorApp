@@ -1,7 +1,5 @@
 using BlazorApp.Application;
 using BlazorApp.CommonInfrastructure;
-using BlazorApp.CommonInfrastructure.Middleware;
-using FluentValidation.AspNetCore;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();

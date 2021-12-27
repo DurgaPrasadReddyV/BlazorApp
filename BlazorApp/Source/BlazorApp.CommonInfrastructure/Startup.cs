@@ -1,12 +1,9 @@
 using BlazorApp.Application.Common.Interfaces;
 using BlazorApp.Application.FileStorage;
-using BlazorApp.CommonInfrastructure.Common;
 using BlazorApp.CommonInfrastructure.Common.Services;
 using BlazorApp.CommonInfrastructure.FileStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;

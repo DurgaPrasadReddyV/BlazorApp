@@ -1,37 +1,33 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using BlazorApp.Application.Common.Interfaces;
 using BlazorApp.Application.FileStorage;
 using BlazorApp.Application.Identity.Exceptions;
 using BlazorApp.Application.Identity.Interfaces;
 using BlazorApp.Application.Wrapper;
 using BlazorApp.Domain.Common;
 using BlazorApp.Domain.Identity;
-using BlazorApp.CommonInfrastructure.Identity.Extensions;
 using BlazorApp.CommonInfrastructure.Identity.Models;
 using BlazorApp.Shared.Identity;
 using BlazorApp.Shared.Mailing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
 public class IdentityService : IIdentityService
 {
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly SignInManager<BlazorAppUser> _signInManager;
+    private readonly UserManager<BlazorAppUser> _userManager;
+    private readonly RoleManager<BlazorAppRole> _roleManager;
     private readonly IFileStorageService _fileStorage;
 
     public IdentityService(
-        SignInManager<ApplicationUser> signInManager,
-        UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager,
+        SignInManager<BlazorAppUser> signInManager,
+        UserManager<BlazorAppUser> userManager,
+        RoleManager<BlazorAppRole> roleManager,
         IFileStorageService fileStorage)
     {
         _signInManager = signInManager;
@@ -65,7 +61,7 @@ public class IdentityService : IIdentityService
         return user.Id;
     }
 
-    private async Task<ApplicationUser> CreateOrUpdateFromPrincipalAsync(ClaimsPrincipal principal)
+    private async Task<BlazorAppUser> CreateOrUpdateFromPrincipalAsync(ClaimsPrincipal principal)
     {
         string? email = principal.FindFirstValue(ClaimTypes.Upn);
         string? username = principal.GetDisplayName();
@@ -97,7 +93,7 @@ public class IdentityService : IIdentityService
         }
         else
         {
-            user = new ApplicationUser
+            user = new BlazorAppUser
             {
                 ObjectId = principal.GetObjectId(),
                 FirstName = principal.FindFirstValue(ClaimTypes.GivenName),
@@ -130,7 +126,7 @@ public class IdentityService : IIdentityService
             throw new IdentityException(string.Format("Username {0} is already taken.", request.UserName));
         }
 
-        var user = new ApplicationUser
+        var user = new BlazorAppUser
         {
             Email = request.Email,
             FirstName = request.FirstName,
@@ -280,7 +276,7 @@ public class IdentityService : IIdentityService
 
             if (request.Image != null)
             {
-                user.ImageUrl = await _fileStorage.UploadAsync<ApplicationUser>(request.Image, FileType.Image);
+                user.ImageUrl = await _fileStorage.UploadAsync<BlazorAppUser>(request.Image, FileType.Image);
             }
 
             user.FirstName = request.FirstName;
@@ -319,12 +315,12 @@ public class IdentityService : IIdentityService
         return identityResult.Succeeded ? await Result.SuccessAsync() : await Result.FailAsync(errors);
     }
 
-    private async Task<string> GetMobilePhoneVerificationCodeAsync(ApplicationUser user)
+    private async Task<string> GetMobilePhoneVerificationCodeAsync(BlazorAppUser user)
     {
         return await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
     }
 
-    private async Task<string> GetEmailVerificationUriAsync(ApplicationUser user, string origin)
+    private async Task<string> GetEmailVerificationUriAsync(BlazorAppUser user, string origin)
     {
         string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

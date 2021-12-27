@@ -2,9 +2,7 @@
 using BlazorApp.Client.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
-using System.Security.Claims;
 
 namespace BlazorApp.Client.Pages.Identity;
 

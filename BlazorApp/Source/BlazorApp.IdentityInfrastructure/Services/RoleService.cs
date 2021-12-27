@@ -11,19 +11,18 @@ using BlazorApp.Shared.Identity;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
 public class RoleService : IRoleService
 {
     private readonly ICurrentUser _currentUser;
-    private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ApplicationDbContext _context;
+    private readonly RoleManager<BlazorAppRole> _roleManager;
+    private readonly UserManager<BlazorAppUser> _userManager;
+    private readonly IdentityDbContext _context;
     private readonly IRoleClaimsService _roleClaimService;
 
-    public RoleService(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context, ICurrentUser currentUser, IRoleClaimsService roleClaimService)
+    public RoleService(RoleManager<BlazorAppRole> roleManager, UserManager<BlazorAppUser> userManager, IdentityDbContext context, ICurrentUser currentUser, IRoleClaimsService roleClaimService)
     {
         _roleManager = roleManager;
         _userManager = userManager;
@@ -121,7 +120,7 @@ public class RoleService : IRoleService
                 throw new IdentityException("Similar Role already exists.", statusCode: System.Net.HttpStatusCode.BadRequest);
             }
 
-            var newRole = new ApplicationRole(request.Name, request.Description);
+            var newRole = new BlazorAppRole(request.Name, request.Description);
             var response = await _roleManager.CreateAsync(newRole);
             await _context.SaveChangesAsync();
             if (response.Succeeded)

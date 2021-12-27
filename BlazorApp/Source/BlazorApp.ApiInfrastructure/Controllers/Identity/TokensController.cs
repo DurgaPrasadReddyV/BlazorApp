@@ -1,10 +1,9 @@
 using BlazorApp.Application.Identity.Interfaces;
 using BlazorApp.Application.Wrapper;
-using BlazorApp.Domain.Identity;
 using BlazorApp.Shared.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Annotations;
 
 namespace BlazorApp.Host.Controllers.Identity;
 

@@ -6,15 +6,14 @@ using BlazorApp.CommonInfrastructure.Persistence.Contexts;
 using BlazorApp.Shared.Identity;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
 public class RoleClaimsService : IRoleClaimsService
 {
-    private readonly ApplicationDbContext _db;
+    private readonly IdentityDbContext _db;
 
-    public RoleClaimsService(ApplicationDbContext context)
+    public RoleClaimsService(IdentityDbContext context)
     {
         _db = context;
     }
@@ -89,7 +88,7 @@ public class RoleClaimsService : IRoleClaimsService
                 return await Result<string>.FailAsync("Similar Role Claim already exists.");
             }
 
-            var roleClaim = request.Adapt<ApplicationRoleClaim>();
+            var roleClaim = request.Adapt<BlazorAppRoleClaim>();
             await _db.RoleClaims.AddAsync(roleClaim);
             await _db.SaveChangesAsync();
             return await Result<string>.SuccessAsync(string.Format("Role Claim {0} created.", request.Value));

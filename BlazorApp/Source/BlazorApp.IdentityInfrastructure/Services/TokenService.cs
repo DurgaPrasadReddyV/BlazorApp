@@ -8,11 +8,8 @@ using BlazorApp.Application.Identity.Interfaces;
 using BlazorApp.Application.Wrapper;
 using BlazorApp.Domain.Identity;
 using BlazorApp.CommonInfrastructure.Identity.Models;
-using BlazorApp.CommonInfrastructure.Persistence.Contexts;
 using BlazorApp.Shared.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,11 +17,11 @@ namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
 public class TokenService : ITokenService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<BlazorAppUser> _userManager;
     private readonly JwtSettings _jwtSettings;
 
     public TokenService(
-        UserManager<ApplicationUser> userManager,
+        UserManager<BlazorAppUser> userManager,
         IOptions<JwtSettings> jwtSettings)
     {
         _userManager = userManager;
@@ -86,12 +83,12 @@ public class TokenService : ITokenService
         return await Result<TokenResponse>.SuccessAsync(response);
     }
 
-    private string GenerateJwt(ApplicationUser user, string ipAddress)
+    private string GenerateJwt(BlazorAppUser user, string ipAddress)
     {
         return GenerateEncryptedToken(GetSigningCredentials(), GetClaims(user, ipAddress));
     }
 
-    private IEnumerable<Claim> GetClaims(ApplicationUser user, string ipAddress)
+    private IEnumerable<Claim> GetClaims(BlazorAppUser user, string ipAddress)
     {
         return new List<Claim>
             {

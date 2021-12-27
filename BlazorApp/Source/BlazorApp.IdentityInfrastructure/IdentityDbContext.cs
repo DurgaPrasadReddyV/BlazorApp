@@ -1,22 +1,45 @@
 using System.Data;
 using BlazorApp.Application.Common.Interfaces;
 using BlazorApp.Application.Identity.Interfaces;
+using BlazorApp.CommonInfrastructure.Identity.Models;
 using BlazorApp.Domain.Common.Contracts;
+using BlazorApp.Domain.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.CommonInfrastructure.Persistence.Contexts;
 
-public class ApplicationDbContext : BaseDbContext
+public class IdentityDbContext : IdentityDbContext<BlazorAppUser, BlazorAppRole, string, BlazorAppUserClaim, BlazorAppUserRole, BlazorAppUserLogin, BlazorAppRoleClaim, BlazorAppUserToken>
 {
     private readonly IEventService _eventService;
-    public IDbConnection Connection => Database.GetDbConnection();
     private readonly ICurrentUser _currentUserService;
 
-    public ApplicationDbContext(DbContextOptions options, ICurrentUser currentUserService, IEventService eventService)
+    public IdentityDbContext(DbContextOptions options, ICurrentUser currentUserService, IEventService eventService)
     : base(options)
     {
         _currentUserService = currentUserService;
         _eventService = eventService;
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<BlazorAppRole>().ToTable(TableNames.BlazorAppRoles);
+        modelBuilder.Entity<BlazorAppRoleClaim>().ToTable(TableNames.BlazorAppRoleClaims);
+        modelBuilder.Entity<BlazorAppUserRole>().ToTable(TableNames.BlazorAppUserRoles);
+        modelBuilder.Entity<BlazorAppUser>().ToTable(TableNames.BlazorAppUsers);
+        modelBuilder.Entity<BlazorAppUserLogin>().ToTable(TableNames.BlazorAppUserLogins);
+        modelBuilder.Entity<BlazorAppUserClaim>().ToTable(TableNames.BlazorAppUserClaims);
+        modelBuilder.Entity<BlazorAppUserToken>().ToTable(TableNames.BlazorAppUserTokens);
+
+        modelBuilder.AppendGlobalQueryFilter<ISoftDelete>(s => s.DeletedOn == null);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.EnableSensitiveDataLogging();
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -49,6 +72,7 @@ public class ApplicationDbContext : BaseDbContext
         }
 
         int results = await base.SaveChangesAsync(cancellationToken);
+
         if (_eventService == null) return results;
         var entitiesWithEvents = ChangeTracker.Entries<BaseEntity>()
                                                 .Select(e => e.Entity)

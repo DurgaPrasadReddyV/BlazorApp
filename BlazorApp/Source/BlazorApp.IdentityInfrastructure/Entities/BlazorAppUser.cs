@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Models;
 
-public class ApplicationUser : IdentityUser
+public class BlazorAppUser : IdentityUser
 {
     public string? FirstName { get; set; }
 

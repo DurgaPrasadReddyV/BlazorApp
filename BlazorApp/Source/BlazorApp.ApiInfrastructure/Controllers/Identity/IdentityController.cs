@@ -5,6 +5,7 @@ using BlazorApp.CommonInfrastructure.Identity.Permissions;
 using BlazorApp.Shared.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace BlazorApp.Host.Controllers.Identity;
 

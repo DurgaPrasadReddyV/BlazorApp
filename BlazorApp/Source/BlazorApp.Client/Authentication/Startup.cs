@@ -1,7 +1,6 @@
 ﻿using BlazorApp.Client.Authentication.Jwt;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BlazorApp.Client.Authentication;
 

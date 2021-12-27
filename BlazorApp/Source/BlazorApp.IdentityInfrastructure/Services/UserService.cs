@@ -11,20 +11,19 @@ using BlazorApp.Shared.Identity;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
 public class UserService : IUserService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly ApplicationDbContext _context;
+    private readonly UserManager<BlazorAppUser> _userManager;
+    private readonly RoleManager<BlazorAppRole> _roleManager;
+    private readonly IdentityDbContext _context;
 
     public UserService(
-        UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager,
-        ApplicationDbContext context)
+        UserManager<BlazorAppUser> userManager,
+        RoleManager<BlazorAppRole> roleManager,
+        IdentityDbContext context)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -33,7 +32,7 @@ public class UserService : IUserService
 
     public async Task<PaginatedResult<UserDetailsDto>> SearchAsync(UserListFilter filter)
     {
-        var filters = new Filters<ApplicationUser>();
+        var filters = new Filters<BlazorAppUser>();
         filters.Add(filter.IsActive.HasValue, x => x.IsActive == filter.IsActive);
 
         var query = _userManager.Users.ApplyFilter(filters);
@@ -42,7 +41,7 @@ public class UserService : IUserService
         string? ordering = new OrderByConverter().ConvertBack(filter.OrderBy);
         query = !string.IsNullOrWhiteSpace(ordering) ? query.OrderBy(ordering) : query.OrderBy(a => a.Id);
 
-        return await query.ToMappedPaginatedResultAsync<ApplicationUser, UserDetailsDto>(filter.PageNumber, filter.PageSize);
+        return await query.ToMappedPaginatedResultAsync<BlazorAppUser, UserDetailsDto>(filter.PageNumber, filter.PageSize);
     }
 
     public async Task<Result<List<UserDetailsDto>>> GetAllAsync()

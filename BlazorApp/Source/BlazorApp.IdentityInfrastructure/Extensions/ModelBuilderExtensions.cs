@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using BlazorApp.CommonInfrastructure.Identity.Models;
+using BlazorApp.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,44 +10,6 @@ namespace BlazorApp.CommonInfrastructure.Persistence;
 
 public static class ModelBuilderExtensions
 {
-    public static void ApplyIdentityConfiguration(this ModelBuilder builder)
-    {
-        builder.Entity<ApplicationUser>(entity =>
-        {
-            entity.ToTable("Users", "IDENTITY");
-            entity.Property(u => u.ObjectId).HasMaxLength(256);
-        });
-        builder.Entity<ApplicationRole>(entity =>
-        {
-            entity.ToTable("Roles", "IDENTITY");
-            entity.Metadata.RemoveIndex(new[] { entity.Property(r => r.NormalizedName).Metadata });
-            entity.HasIndex(r => new { r.NormalizedName}).HasDatabaseName("RoleNameIndex").IsUnique();
-        });
-        builder.Entity<ApplicationRoleClaim>(entity =>
-        {
-            entity.ToTable("RoleClaims", "IDENTITY");
-        });
-
-        builder.Entity<IdentityUserRole<string>>(entity =>
-        {
-            entity.ToTable("UserRoles", "IDENTITY");
-        });
-
-        builder.Entity<IdentityUserClaim<string>>(entity =>
-        {
-            entity.ToTable("UserClaims", "IDENTITY");
-        });
-
-        builder.Entity<IdentityUserLogin<string>>(entity =>
-        {
-            entity.ToTable("UserLogins", "IDENTITY");
-        });
-        builder.Entity<IdentityUserToken<string>>(entity =>
-        {
-            entity.ToTable("UserTokens", "IDENTITY");
-        });
-    }
-
     public static ModelBuilder AppendGlobalQueryFilter<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> expression)
     {
         // gets a list of entities that implement the interface TInterface

@@ -1,6 +1,4 @@
-﻿using MudBlazor;
-
-namespace BlazorApp.Client.Preferences;
+﻿namespace BlazorApp.Client.Preferences;
 
 public interface IClientPreferenceManager : IPreferenceManager
 {

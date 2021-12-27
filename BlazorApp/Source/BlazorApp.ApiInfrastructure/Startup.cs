@@ -1,14 +1,15 @@
 using BlazorApp.Application.Common.Interfaces;
-using BlazorApp.Application.Identity.Exceptions;
+using BlazorApp.Application.Identity.Interfaces;
 using BlazorApp.CommonInfrastructure.Identity;
+using BlazorApp.CommonInfrastructure.Identity.Permissions;
+using BlazorApp.CommonInfrastructure.Identity.Services;
 using BlazorApp.CommonInfrastructure.Middleware;
 using BlazorApp.CommonInfrastructure.Notifications;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +22,10 @@ public static class Startup
         services.AddSignalR();
         services.AddTransient<NotificationHub>();
         services.AddTransient<INotificationService,NotificationService>();
+
+        services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+        services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        services.AddScoped<ICurrentUser, CurrentUser>();
 
         services.AddScoped<CurrentUserMiddleware>();
         services.AddScoped<RequestLoggingMiddleware>();

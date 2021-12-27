@@ -1,7 +1,5 @@
-﻿using BlazorApp.Client.Common;
-using BlazorApp.Client.Authorization;
+﻿using BlazorApp.Client.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BlazorApp.Client.Shared;
 

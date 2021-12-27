@@ -3,21 +3,17 @@ using BlazorApp.Application.Identity.Exceptions;
 using BlazorApp.Application.Identity.Interfaces;
 using BlazorApp.CommonInfrastructure.Identity;
 using BlazorApp.CommonInfrastructure.Identity.Models;
-using BlazorApp.CommonInfrastructure.Identity.Permissions;
 using BlazorApp.CommonInfrastructure.Identity.Services;
 using BlazorApp.CommonInfrastructure.Mapping;
-using BlazorApp.CommonInfrastructure.Persistence;
 using BlazorApp.CommonInfrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 
@@ -28,16 +24,14 @@ public static class Startup
     public static IServiceCollection AddIdentityInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         MapsterSettings.Configure();
-        services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-        services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-        services.AddScoped<ICurrentUser, CurrentUser>();
+
         services.AddTransient<IIdentityService, IdentityService>();
         services.AddTransient<IRoleClaimsService, RoleClaimsService>();
         services.AddTransient<IRoleService, RoleService>();
         services.AddTransient<ITokenService, TokenService>();
         services.AddTransient<IUserService, UserService>();
 
-        services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+        services.AddIdentity<BlazorAppUser, BlazorAppRole>(options =>
             {
                 options.Password.RequiredLength = 6;
                 options.Password.RequireDigit = false;
@@ -46,11 +40,11 @@ public static class Startup
                 options.Password.RequireUppercase = false;
                 options.User.RequireUniqueEmail = true;
             })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<IdentityDbContext>()
             .AddDefaultTokenProviders();
 
-        services.Configure<JwtSettings>(config.GetSection($"SecuritySettings:{nameof(JwtSettings)}"));
-        var jwtSettings = config.GetSection($"SecuritySettings:{nameof(JwtSettings)}").Get<JwtSettings>();
+        services.Configure<JwtSettings>(config.GetSection($"{nameof(JwtSettings)}"));
+        var jwtSettings = config.GetSection($"{nameof(JwtSettings)}").Get<JwtSettings>();
         if (string.IsNullOrEmpty(jwtSettings.Key))
             throw new InvalidOperationException("No Key defined in JwtSettings config.");
         byte[] key = Encoding.ASCII.GetBytes(jwtSettings.Key);
@@ -123,7 +117,12 @@ public static class Startup
             }
         }
 
-        services.AddDbContext<ApplicationDbContext>(m => m.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(config.GetConnectionString("DefaultConnection"),
+            npgsql =>
+            {
+                npgsql.MigrationsAssembly(typeof(IdentityDbContext).GetTypeInfo().Assembly.GetName().Name);
+                npgsql.MigrationsHistoryTable("__Identity_Migrations");
+            }));
         return services;
     }
 }

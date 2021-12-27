@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Models;
 
-public class ApplicationRoleClaim : IdentityRoleClaim<string>
+public class BlazorAppRoleClaim : IdentityRoleClaim<string>
 {
     public string? Description { get; set; }
     public string? Group { get; set; }
@@ -11,11 +11,11 @@ public class ApplicationRoleClaim : IdentityRoleClaim<string>
     public string? LastModifiedBy { get; set; }
     public DateTime? LastModifiedOn { get; set; }
 
-    public ApplicationRoleClaim()
+    public BlazorAppRoleClaim()
     {
     }
 
-    public ApplicationRoleClaim(string? roleClaimDescription = null, string? roleClaimGroup = null)
+    public BlazorAppRoleClaim(string? roleClaimDescription = null, string? roleClaimGroup = null)
     {
         Description = roleClaimDescription;
         Group = roleClaimGroup;

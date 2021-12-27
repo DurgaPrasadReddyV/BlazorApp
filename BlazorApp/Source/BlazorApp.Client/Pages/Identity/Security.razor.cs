@@ -1,6 +1,5 @@
 ﻿using BlazorApp.Client.ApiClient;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 
 namespace BlazorApp.Client.Pages.Identity;
