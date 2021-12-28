@@ -12,6 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.x.x'
+          
+      - name: Install dependencies
+        run: dotnet restore
+        
+      - name: Build
+        run: dotnet build
+      
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
