@@ -48,12 +48,6 @@ public partial class Login
         }
     }
 
-    private void FillAdministratorCredentials()
-    {
-        _tokenRequest.Email = "admin@root.com";
-        _tokenRequest.Password = "123Pa$$word!";
-    }
-
     private async Task SubmitAsync()
     {
         BusySubmitting = true;
