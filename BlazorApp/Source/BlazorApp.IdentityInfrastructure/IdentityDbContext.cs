@@ -12,14 +12,18 @@ namespace BlazorApp.CommonInfrastructure.Persistence.Contexts;
 
 public class IdentityDbContext : IdentityDbContext<BlazorAppUser, BlazorAppRole, string, BlazorAppUserClaim, BlazorAppUserRole, BlazorAppUserLogin, BlazorAppRoleClaim, BlazorAppUserToken>
 {
-    private readonly IEventService _eventService;
-    private readonly ICurrentUser _currentUserService;
+    private readonly IEventService? _eventService;
+    private readonly ICurrentUser? _currentUserService;
 
     public IdentityDbContext(DbContextOptions options, ICurrentUser currentUserService, IEventService eventService)
     : base(options)
     {
         _currentUserService = currentUserService;
         _eventService = eventService;
+    }
+
+    public IdentityDbContext(DbContextOptions options): base(options)
+    {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,30 +48,34 @@ public class IdentityDbContext : IdentityDbContext<BlazorAppUser, BlazorAppRole,
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        var currentUserId = _currentUserService.GetUserId();
-        foreach (var entry in ChangeTracker.Entries<IAuditableEntity>().ToList())
+        if (_currentUserService != null)
         {
-            switch (entry.State)
+            var currentUserId = _currentUserService.GetUserId();
+
+            foreach (var entry in ChangeTracker.Entries<IAuditableEntity>().ToList())
             {
-                case EntityState.Added:
-                    entry.Entity.CreatedBy = currentUserId;
-                    entry.Entity.LastModifiedBy = currentUserId;
-                    break;
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedBy = currentUserId;
+                        entry.Entity.LastModifiedBy = currentUserId;
+                        break;
 
-                case EntityState.Modified:
-                    entry.Entity.LastModifiedOn = DateTime.UtcNow;
-                    entry.Entity.LastModifiedBy = currentUserId;
-                    break;
+                    case EntityState.Modified:
+                        entry.Entity.LastModifiedOn = DateTime.UtcNow;
+                        entry.Entity.LastModifiedBy = currentUserId;
+                        break;
 
-                case EntityState.Deleted:
-                    if (entry.Entity is ISoftDelete softDelete)
-                    {
-                        softDelete.DeletedBy = currentUserId;
-                        softDelete.DeletedOn = DateTime.UtcNow;
-                        entry.State = EntityState.Modified;
-                    }
+                    case EntityState.Deleted:
+                        if (entry.Entity is ISoftDelete softDelete)
+                        {
+                            softDelete.DeletedBy = currentUserId;
+                            softDelete.DeletedOn = DateTime.UtcNow;
+                            entry.State = EntityState.Modified;
+                        }
 
-                    break;
+                        break;
+                }
             }
         }
 

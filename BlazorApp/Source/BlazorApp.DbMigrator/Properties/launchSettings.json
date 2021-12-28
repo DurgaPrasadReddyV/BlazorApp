@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BlazorApp.DbMigrator": {
+      "commandName": "Project",
+      "commandLineArgs": "\"Server=localhost;Port=5432;Database=BlazorApp;User Id=postgres;Password=admin\""
+    }
+  }
+}

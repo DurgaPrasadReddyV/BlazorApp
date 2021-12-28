@@ -3,19 +3,17 @@ using System;
 using BlazorApp.CommonInfrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace BlazorApp.IdentityInfrastructure.Migrations
+namespace BlazorApp.DbMigrator.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20211227191536_initial")]
-    partial class initial
+    partial class IdentityDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

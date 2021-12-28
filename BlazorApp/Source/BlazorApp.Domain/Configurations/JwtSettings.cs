@@ -1,4 +1,10 @@
-namespace BlazorApp.CommonInfrastructure.Identity;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BlazorApp.Domain.Configurations;
 
 public class JwtSettings
 {
@@ -8,3 +14,4 @@ public class JwtSettings
 
     public int RefreshTokenExpirationInDays { get; set; }
 }
+

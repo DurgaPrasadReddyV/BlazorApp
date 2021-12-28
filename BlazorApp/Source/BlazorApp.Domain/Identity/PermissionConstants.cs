@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace BlazorApp.Domain.Identity;
 
-public partial class PermissionConstants
+public class PermissionConstants
 {
     [DisplayName("Identity")]
     [Description("Identity Permissions")]

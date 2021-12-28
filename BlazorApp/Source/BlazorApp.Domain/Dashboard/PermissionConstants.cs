@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace BlazorApp.Domain.Dashboard;
 
-public partial class PermissionConstants
+public class PermissionConstants
 {
     [DisplayName("Dashboard")]
     [Description("Dashboard Permissions")]

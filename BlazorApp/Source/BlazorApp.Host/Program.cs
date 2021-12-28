@@ -1,5 +1,6 @@
 using BlazorApp.Application;
 using BlazorApp.CommonInfrastructure;
+using BlazorApp.Host.Extensions;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
@@ -21,10 +22,13 @@ try
         config.ReadFrom.Configuration(builder.Configuration);
     });
 
+    var jwtSettings = builder.Services.AddJwtSettings(builder.Configuration);
+    var connectionStrings = builder.Services.AddConnectionStrings(builder.Configuration);
+
     builder.Services.AddApplication();
-    builder.Services.AddCommonInfrastructure(builder.Configuration);
-    builder.Services.AddIdentityInfrastructure(builder.Configuration);
-    builder.Services.AddHttpApiInfrastructure(builder.Configuration);
+    builder.Services.AddCommonInfrastructure();
+    builder.Services.AddIdentityInfrastructure(connectionStrings);
+    builder.Services.AddHttpApiInfrastructure(jwtSettings);
     
     builder.Services.AddRazorPages();
 

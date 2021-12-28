@@ -12,7 +12,7 @@ namespace BlazorApp.CommonInfrastructure;
 
 public static class Startup
 {
-    public static IServiceCollection AddCommonInfrastructure(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddCommonInfrastructure(this IServiceCollection services)
     {
         services.AddTransient<IFileStorageService, LocalFileStorageService>();
         services.AddTransient<IEventService, EventService>();

@@ -12,6 +12,7 @@ using BlazorApp.Shared.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using BlazorApp.Domain.Configurations;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
