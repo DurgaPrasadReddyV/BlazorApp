@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace BlazorApp.Client.Pages.Identity.Roles;
+namespace BlazorApp.Client.Pages.Administration;
 
 public partial class Roles
 {
@@ -19,7 +19,7 @@ public partial class Roles
     private bool _canSearchRoles;
     private bool _canViewRoleClaims;
 
-    private bool _loading = true;
+    private bool _loaded;
 
     public bool checkBox { get; set; } = true;
 
@@ -32,12 +32,11 @@ public partial class Roles
         _canViewRoleClaims = true; 
 
         await GetRolesAsync();
-        _loading = false;
+        _loaded = true;
     }
 
     private async Task GetRolesAsync()
     {
-        _loading = true;
         var response = await RolesClient.GetListAsync();
         if (response.Succeeded && response.Data is not null)
         {
@@ -50,8 +49,6 @@ public partial class Roles
                 _snackBar.Add(message, Severity.Error);
             }
         }
-
-        _loading = false;
     }
 
     private async Task Delete(string? id)

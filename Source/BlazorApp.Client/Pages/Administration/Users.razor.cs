@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace BlazorApp.Client.Pages.Identity;
+namespace BlazorApp.Client.Pages.Administration;
 
 public partial class Users
 {

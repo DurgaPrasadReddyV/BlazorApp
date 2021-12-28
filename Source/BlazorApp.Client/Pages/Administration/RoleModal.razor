@@ -21,7 +21,6 @@
             }
         </TitleContent>
         <DialogContent>
-            <MudTextField For="@(() => RoleModel.Id)" @bind-Value="RoleModel.Id" Label="@_localizer["Role ID"]" Disabled />
             <MudTextField For="@(() => RoleModel.Name)" @bind-Value="RoleModel.Name" Label="@_localizer["Role Name"]" />
             <MudTextField For="@(() => RoleModel.Description)" @bind-Value="RoleModel.Description" Label="@_localizer["Description"]" />
         </DialogContent>

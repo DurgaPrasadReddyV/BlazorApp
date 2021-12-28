@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace BlazorApp.Client.Pages.Identity.Roles;
+namespace BlazorApp.Client.Pages.Administration;
 
 public partial class RoleModal
 {

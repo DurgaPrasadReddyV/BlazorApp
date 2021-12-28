@@ -4,7 +4,7 @@ using BlazorApp.Client.Shared;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace BlazorApp.Client.Pages.Authentication;
+namespace BlazorApp.Client.Pages.Login;
 
 public partial class Login
 {

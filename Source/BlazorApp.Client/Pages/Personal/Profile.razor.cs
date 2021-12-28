@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 
-namespace BlazorApp.Client.Pages.Identity;
+namespace BlazorApp.Client.Pages.Personal;
 
 public partial class Profile
 {

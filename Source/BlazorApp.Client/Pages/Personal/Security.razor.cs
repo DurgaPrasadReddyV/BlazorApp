@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace BlazorApp.Client.Pages.Identity;
+namespace BlazorApp.Client.Pages.Personal;
 
 public partial class Security
 {
