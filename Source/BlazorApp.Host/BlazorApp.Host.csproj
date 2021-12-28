@@ -25,6 +25,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Files\" />
+	  <None Update="Files\sample.txt">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 </Project>
