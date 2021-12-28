@@ -10,6 +10,7 @@ COPY Source/BlazorApp.Application/*.csproj Source/BlazorApp.Application/
 COPY Source/BlazorApp.Domain/*.csproj Source/BlazorApp.Domain/
 COPY Source/BlazorApp.Shared/*.csproj Source/BlazorApp.Shared/
 COPY Source/BlazorApp.Host/*.csproj Source/BlazorApp.Host/
+COPY Source/BlazorApp.DbMigrator/*.csproj Source/BlazorApp.DbMigrator/
 RUN dotnet restore
 COPY . .
 
