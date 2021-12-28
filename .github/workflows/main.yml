@@ -24,7 +24,7 @@ jobs:
         run: dotnet build
         
       - name: Apply Migrations
-        run: dotnet run --project ./Source/BlazorApp.DbMigrator -- ${{ secrets.POSTGRES_CONNECTION_STRING }}
+        run: dotnet run --project ./Source/BlazorApp.DbMigrator -- "${{ secrets.POSTGRES_CONNECTION_STRING }}"
       
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
