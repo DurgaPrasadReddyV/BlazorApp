@@ -22,18 +22,28 @@ try
         config.ReadFrom.Configuration(builder.Configuration);
     });
 
-    var jwtSettings = builder.Services.AddJwtSettings(builder.Configuration);
-    var connectionStrings = builder.Services.AddConnectionStrings(builder.Configuration);
+    var jwtSettings = builder.Services.LoadJwtSettings(builder.Configuration);
+    var connectionStrings = builder.Services.LoadConnectionStrings(builder.Configuration);
+    var swaggerSettings = builder.Services.LoadSwaggerSettings(builder.Configuration);
 
     builder.Services.AddApplication();
     builder.Services.AddCommonInfrastructure();
     builder.Services.AddIdentityInfrastructure(connectionStrings);
-    builder.Services.AddHttpApiInfrastructure(jwtSettings);
-    
-    builder.Services.AddRazorPages();
+    builder.Services.AddHttpApiInfrastructure(jwtSettings, swaggerSettings);
 
     var app = builder.Build();
 
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseWebAssemblyDebugging();
+    }
+    else
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
+    }
+
+    app.UseHttpsRedirection();
     app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
     app.UseFileStorage();
@@ -43,12 +53,19 @@ try
     app.UseAuthorization();
     app.UseRequestLogging();
     app.UseEndpoints(endpoints =>
-    {
+    { 
         endpoints.MapControllers().RequireAuthorization();
         endpoints.MapNotifications();
+        endpoints.MapFallbackToFile("index.html");
     });
 
-    app.MapFallbackToFile("index.html");
+    app.UseOpenApi();
+    app.UseSwaggerUi3(options =>
+    {
+        options.DefaultModelsExpandDepth = -1;
+        options.DocExpansion = "none";
+        options.TagsSorter = "alpha";
+    });
 
     app.Run();
 }

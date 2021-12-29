@@ -17,34 +17,35 @@ public static class Startup
 {
     private const string ClientName = "FullStackHero.API";
 
-    public static IServiceCollection AddClientServices(this IServiceCollection services, WebAssemblyHostBuilder builder) =>
-        services
-            .AddLocalization(options => options.ResourcesPath = "Resources")
-            .AddBlazoredLocalStorage()
-            .AddMudServices(configuration =>
-                {
-                    configuration.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
-                    configuration.SnackbarConfiguration.HideTransitionDuration = 100;
-                    configuration.SnackbarConfiguration.ShowTransitionDuration = 100;
-                    configuration.SnackbarConfiguration.VisibleStateDuration = 3000;
-                    configuration.SnackbarConfiguration.ShowCloseIcon = false;
-                })
-            .AddScoped<IClientPreferenceManager, ClientPreferenceManager>()
-            .AutoRegisterInterfaces<IAppService>()
-            .AutoRegisterInterfaces<IApiService>()
-            .AddAuthentication()
-            .AddAuthorizationCore(RegisterPermissionClaims)
-            .AddHttpClient(ClientName, client =>
-                {
-                    client.DefaultRequestHeaders.AcceptLanguage.Clear();
-                    client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
-                    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-                })
-                .AddAuthenticationHandler()
-                .Services
-            .AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ClientName))
-            .AddScoped(sp => new NotificationClient(sp.GetRequiredService<IAccessTokenProvider>(), sp.GetRequiredService<IAuthenticationService>(), builder))
-            .AddScoped(sp => sp.GetRequiredService<NotificationClient>().HubConnection);
+    public static IServiceCollection AddClientServices(this IServiceCollection services, WebAssemblyHostBuilder builder)
+    {
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
+        services.AddBlazoredLocalStorage();
+        services.AddMudServices(configuration =>
+        {
+            configuration.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
+            configuration.SnackbarConfiguration.HideTransitionDuration = 100;
+            configuration.SnackbarConfiguration.ShowTransitionDuration = 100;
+            configuration.SnackbarConfiguration.VisibleStateDuration = 3000;
+            configuration.SnackbarConfiguration.ShowCloseIcon = false;
+        });
+        services.AddScoped<IClientPreferenceManager, ClientPreferenceManager>();
+        services.AutoRegisterInterfaces<IAppService>();
+        services.AutoRegisterInterfaces<IApiService>();
+        services.AddAuthentication();
+        services.AddAuthorizationCore(RegisterPermissionClaims);
+        services.AddHttpClient(ClientName, client =>
+        {
+            client.DefaultRequestHeaders.AcceptLanguage.Clear();
+            client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
+            client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+        }).AddAuthenticationHandler();
+
+        services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ClientName));
+        services.AddScoped<NotificationClient>();
+        services.AddScoped(sp => sp.GetRequiredService<NotificationClient>().HubConnection);
+        return services;
+    }
 
     private static void RegisterPermissionClaims(AuthorizationOptions options)
     {

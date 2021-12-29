@@ -9,7 +9,6 @@ namespace BlazorApp.Client.Notifications;
 public class NotificationClient : IAsyncDisposable
 {
     private readonly IAuthenticationService _authService;
-    private readonly WebAssemblyHostBuilder _builder;
     private CancellationTokenSource _cts = new();
 
     public HubConnection HubConnection { get; private set; }
@@ -24,12 +23,11 @@ public class NotificationClient : IAsyncDisposable
 
     public event EventHandler<ConnectionStateChangedEventArgs>? ConnectionStateChanged;
 
-    public NotificationClient(IAccessTokenProvider tokenProvider, IAuthenticationService authService, WebAssemblyHostBuilder builder)
+    public NotificationClient(IAccessTokenProvider tokenProvider, IAuthenticationService authService, IWebAssemblyHostEnvironment webAssemblyHostEnvironment)
     {
         _authService = authService;
-        _builder = builder;
         HubConnection = new HubConnectionBuilder()
-            .WithUrl($"{builder.HostEnvironment.BaseAddress}notifications", options =>
+            .WithUrl($"{webAssemblyHostEnvironment.BaseAddress}notifications", options =>
                 options.AccessTokenProvider =
                     () => tokenProvider.GetAccessTokenAsync())
             .WithAutomaticReconnect()

@@ -40,7 +40,7 @@ public partial class PersonCard
                 UserId = user.GetUserId();
                 Email = user.GetEmail();
                 string? userImage = user.GetImageUrl();
-                ImageUri = userImage;
+                ImageUri = userImage?.Replace("{server_url}/", _hostEnvironment.BaseAddress);
                 StateHasChanged();
             }
         }

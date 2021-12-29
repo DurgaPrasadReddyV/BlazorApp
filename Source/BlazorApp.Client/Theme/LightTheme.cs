@@ -16,6 +16,7 @@ public class LightTheme : MudTheme
             DrawerBackground = CustomColors.Light.DrawerBackground,
             AppbarText = CustomColors.Light.AppbarText,
             DrawerText = CustomColors.Light.DrawerText,
+            Success = CustomColors.Light.Primary,
             TableLines = "#e0e0e029",
             OverlayDark = "hsl(0deg 0% 0% / 75%)"
         };

@@ -1,3 +1,3 @@
-client -> 1efd930467da9f21f0b9ef83cdfc8ccc34058b54
+client -> 1efd930467da9f21f0b9ef83cdfc8ccc34058b54 --> User Management #41 initial
 
-api -> 209c76c222759e79cd078bad6767ad21b0f89ab5
+api -> 2f79faf43ae159c361079fddf8eb16db51893673 --> added cors for react
