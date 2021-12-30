@@ -27,6 +27,7 @@ try
     var connectionStrings = builder.Services.LoadConnectionStrings(builder.Configuration);
     var swaggerSettings = builder.Services.LoadSwaggerSettings(builder.Configuration);
     var corsSettings = builder.Services.LoadCorsSettings(builder.Configuration);
+    var securityHeaderSettings = builder.Services.LoadSecurityHeaderSettings(builder.Configuration);
 
     builder.Services.AddApplication();
     builder.Services.AddCommonInfrastructure();
@@ -48,6 +49,7 @@ try
     app.UseHttpsRedirection();
     app.UseBlazorFrameworkFiles();
     app.UseStaticFiles();
+    app.UseSecurityHeaders(securityHeaderSettings);
     app.UseFileStorage();
     app.UseRouting();
     app.UseCors(ApiConstants.CorsPolicy);

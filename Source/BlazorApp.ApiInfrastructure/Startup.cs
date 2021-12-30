@@ -152,6 +152,45 @@ public static class Startup
         return services;
     }
 
+    public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app, SecurityHeaderSettings securityHeaderSettings)
+    {
+
+        return app.Use(async (context, next) =>
+        {
+            if (!string.IsNullOrEmpty(securityHeaderSettings.XFrameOptions) && !string.IsNullOrWhiteSpace(securityHeaderSettings.XFrameOptions))
+            {
+                context.Response.Headers.Add(ApiConstants.XFRAMEOPTIONS, securityHeaderSettings.XFrameOptions);
+            }
+
+            if (!string.IsNullOrEmpty(securityHeaderSettings.XContentTypeOptions) && !string.IsNullOrWhiteSpace(securityHeaderSettings.XContentTypeOptions))
+            {
+                context.Response.Headers.Add(ApiConstants.XCONTENTTYPEOPTIONS, securityHeaderSettings.XContentTypeOptions);
+            }
+
+            if (!string.IsNullOrEmpty(securityHeaderSettings.ReferrerPolicy) && !string.IsNullOrWhiteSpace(securityHeaderSettings.ReferrerPolicy))
+            {
+                context.Response.Headers.Add(ApiConstants.REFERRERPOLICY, securityHeaderSettings.ReferrerPolicy);
+            }
+
+            if (!string.IsNullOrEmpty(securityHeaderSettings.PermissionsPolicy) && !string.IsNullOrWhiteSpace(securityHeaderSettings.PermissionsPolicy))
+            {
+                context.Response.Headers.Add(ApiConstants.PERMISSIONSPOLICY, securityHeaderSettings.PermissionsPolicy);
+            }
+
+            if (!string.IsNullOrEmpty(securityHeaderSettings.SameSite) && !string.IsNullOrWhiteSpace(securityHeaderSettings.SameSite))
+            {
+                context.Response.Headers.Add(ApiConstants.SAMESITE, securityHeaderSettings.SameSite);
+            }
+
+            if (!string.IsNullOrEmpty(securityHeaderSettings.XXSSProtection) && !string.IsNullOrWhiteSpace(securityHeaderSettings.XXSSProtection))
+            {
+                context.Response.Headers.Add(ApiConstants.XXSSPROTECTION, securityHeaderSettings.XXSSProtection);
+            }
+
+            await next();
+        });
+    }
+
     public static IApplicationBuilder UseCurrentUser(this IApplicationBuilder app)
     {
         app.UseMiddleware<CurrentUserMiddleware>();

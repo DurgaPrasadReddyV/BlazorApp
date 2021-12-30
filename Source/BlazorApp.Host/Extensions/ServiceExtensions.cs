@@ -31,5 +31,12 @@ namespace BlazorApp.Host.Extensions
             services.Configure<CorsSettings>(corsSettingsConfigSection);
             return corsSettingsConfigSection.Get<CorsSettings>();
         }
+
+        public static SecurityHeaderSettings LoadSecurityHeaderSettings(this IServiceCollection services, IConfiguration config)
+        {
+            var securityHeaderSettingsConfigSection = config.GetSection($"{nameof(SecurityHeaderSettings)}");
+            services.Configure<SecurityHeaderSettings>(securityHeaderSettingsConfigSection);
+            return securityHeaderSettingsConfigSection.Get<SecurityHeaderSettings>();
+        }
     }
 }
