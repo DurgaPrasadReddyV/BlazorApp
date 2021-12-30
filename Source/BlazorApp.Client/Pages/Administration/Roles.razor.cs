@@ -1,145 +1,66 @@
-﻿using BlazorApp.Client.ApiClient;
+﻿using BlazorApp.Client.Components.EntityTable;
+using BlazorApp.Client.ApiClient;
+using BlazorApp.Client.Authorization;
+using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BlazorApp.Client.Pages.Administration;
 
 public partial class Roles
 {
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject]
+    protected IAuthorizationService AuthService { get; set; } = default!;
+
     [Inject]
     private IRolesClient RolesClient { get; set; } = default!;
 
-    private List<RoleDto> _roleList = new();
-    private RoleDto _role = new();
-    private string _searchString = string.Empty;
+    protected EntityClientTableContext<RoleDto, string?, RoleRequest> Context { get; set; } = default!;
 
-    private bool _canCreateRoles;
-    private bool _canEditRoles;
-    private bool _canDeleteRoles;
-    private bool _canSearchRoles;
     private bool _canViewRoleClaims;
 
-    private bool _loaded;
-
-    public bool checkBox { get; set; } = true;
+    protected bool CheckBox { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
-        _canCreateRoles = true; 
-        _canEditRoles = true; 
-        _canDeleteRoles = true; 
-        _canSearchRoles = true; 
-        _canViewRoleClaims = true; 
+        var state = await AuthState;
+        _canViewRoleClaims = (await AuthService.AuthorizeAsync(state.User, FSHPermissions.RoleClaims.View)).Succeeded;
 
-        await GetRolesAsync();
-        _loaded = true;
-    }
-
-    private async Task GetRolesAsync()
-    {
-        var response = await RolesClient.GetListAsync();
-        if (response.Succeeded && response.Data is not null)
-        {
-            _roleList = response.Data.Where(t => t is not null).Cast<RoleDto>().ToList();
-        }
-        else if (response.Messages is not null)
-        {
-            foreach (string message in response.Messages)
+        Context = new(
+            fields: new()
             {
-                _snackBar.Add(message, Severity.Error);
-            }
-        }
+                new(role => role.Id, L["Id"]),
+                new(role => role.Name, L["Name"]),
+                new(role => role.Description, L["Description"])
+            },
+            idFunc: role => role.Id,
+            loadDataFunc: async () => (await RolesClient.GetListAsync()).Adapt<ListResult<RoleDto>>(),
+            searchFunc: Search,
+            createFunc: async role => await RolesClient.RegisterRoleAsync(role),
+            updateFunc: async (_, role) => await RolesClient.RegisterRoleAsync(role),
+            deleteFunc: async id => await RolesClient.DeleteAsync(id),
+            entityName: L["Role"],
+            entityNamePlural: L["Roles"],
+            searchPermission: FSHPermissions.Roles.ListAll,
+            createPermission: FSHPermissions.Roles.Register,
+            updatePermission: FSHPermissions.Roles.Update,
+            deletePermission: FSHPermissions.Roles.Remove,
+            hasExtraActionsFunc: () => _canViewRoleClaims,
+            canUpdateEntityFunc: e => !e.IsDefault,
+            canDeleteEntityFunc: e => !e.IsDefault);
     }
 
-    private async Task Delete(string? id)
-    {
-        if (string.IsNullOrEmpty(id))
-        {
-            throw new ArgumentNullException(nameof(id));
-        }
-
-        string deleteContent = _localizer["Delete Content"];
-        var parameters = new DialogParameters
-            {
-                { nameof(Shared.Dialogs.DeleteConfirmation.ContentText), string.Format(deleteContent, id) }
-            };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = _dialogService.Show<Shared.Dialogs.DeleteConfirmation>(_localizer["Delete"], parameters, options);
-        var result = await dialog.Result;
-        if (!result.Cancelled)
-        {
-            var response = await RolesClient.DeleteAsync(id);
-            if (response.Succeeded)
-            {
-                if (response.Messages?.Count > 0)
-                {
-                    _snackBar.Add(response.Messages.First(), Severity.Success);
-                }
-            }
-            else if (response.Messages is not null)
-            {
-                foreach (string message in response.Messages)
-                {
-                    _snackBar.Add(message, Severity.Error);
-                }
-            }
-
-            await Reset();
-        }
-    }
-
-    private async Task InvokeModal(string? id = null)
-    {
-        var parameters = new DialogParameters();
-        if (id is not null && _roleList.FirstOrDefault(c => c.Id == id) is RoleDto role)
-        {
-            _role = role;
-            parameters.Add(nameof(RoleModal.RoleModel), new RoleRequest
-            {
-                Id = _role.Id,
-                Name = _role.Name,
-                Description = _role.Description
-            });
-        }
-
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = _dialogService.Show<RoleModal>(id == null ? _localizer["Create"] : _localizer["Edit"], parameters, options);
-        var result = await dialog.Result;
-        if (!result.Cancelled)
-        {
-            await Reset();
-        }
-    }
-
-    private async Task Reset()
-    {
-        _role = new RoleDto();
-        await GetRolesAsync();
-    }
-
-    private bool Search(RoleDto role)
-    {
-        if (string.IsNullOrWhiteSpace(_searchString)) return true;
-        if (role.Name?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
-        {
-            return true;
-        }
-
-        if (role.Description?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) == true)
-        {
-            return true;
-        }
-
-        return false;
-    }
+    private bool Search(string? searchString, RoleDto role) =>
+        string.IsNullOrWhiteSpace(searchString)
+        || role.Name?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true
+        || role.Description?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true;
 
     private void ManagePermissions(string? roleId)
     {
-        if (string.IsNullOrEmpty(roleId))
-        {
-            throw new ArgumentNullException(nameof(roleId));
-        }
-
+        ArgumentNullException.ThrowIfNull(roleId, nameof(roleId));
         _navigationManager.NavigateTo($"/identity/role-permissions/{roleId}");
     }
 }

@@ -12,9 +12,12 @@
 
 	<ItemGroup>
 	  <None Include="ApiClient\nswag.json" />
+	  <None Include="Components\EntityTable\AddEditModal.razor" />
+	  <None Include="Components\EntityTable\EntityTable.razor" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Mapster" Version="7.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.1" PrivateAssets="all" />
 		<PackageReference Include="MudBlazor" Version="6.0.2" />

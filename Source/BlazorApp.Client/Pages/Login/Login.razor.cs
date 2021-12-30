@@ -52,45 +52,11 @@ public partial class Login
     {
         BusySubmitting = true;
 
-        await ExecuteApiCallAsync(() => AuthService.LoginAsync(_tokenRequest));
+        await ApiHelper.ExecuteCallGuardedAsync(
+            () => AuthService.LoginAsync(_tokenRequest),
+            _snackBar,
+            _customValidation);
 
         BusySubmitting = false;
-    }
-
-    private async Task<T?> ExecuteApiCallAsync<T>(Func<Task<T>> call)
-    where T : Result
-    {
-        _customValidation?.ClearErrors();
-        try
-        {
-            var result = await call();
-
-            if (result.Succeeded)
-            {
-                return result;
-            }
-
-            if (result.Messages is not null)
-            {
-                foreach (string message in result.Messages)
-                {
-                    _snackBar.Add(message, Severity.Error);
-                }
-            }
-            else
-            {
-                _snackBar.Add("Something went wrong!", Severity.Error);
-            }
-        }
-        catch (ApiException<HttpValidationProblemDetails> ex)
-        {
-            _customValidation?.DisplayErrors(ex.Result.Errors);
-        }
-        catch (ApiException<ErrorResultOfString> ex)
-        {
-            _snackBar.Add(ex.Result.Exception, Severity.Error);
-        }
-
-        return default;
     }
 }

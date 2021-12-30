@@ -8,6 +8,8 @@
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
+            <DataAnnotationsValidator />
+             <CustomValidation @ref="_customValidation" />
             <MudGrid>
                 <MudItem xs="12" md="6">
                     <MudTextField T="string" @bind-Value="_passwordModel.NewPassword"

@@ -1,5 +1,5 @@
-client -> 1efd930467da9f21f0b9ef83cdfc8ccc34058b54 --> User Management #41 initial
-https://github.com/fullstackhero/blazor-wasm-boilerplate/compare/1efd930467da9f21f0b9ef83cdfc8ccc34058b54...013eaf28a2f04d8b713ba6d29b8b5615ab0a8894
+client -> c8b9fa82556f93348f4fc73c94fea92a50137036 --> Merge pull request #65 from fretje/roles
+https://github.com/fullstackhero/blazor-wasm-boilerplate/compare/c8b9fa82556f93348f4fc73c94fea92a50137036...
 
 api -> 2ee3c940b486bae10a6c8d43e03b5e7349302f4c --> Merge pull request #320 from fretje/roleaddisdefault
 https://github.com/fullstackhero/dotnet-webapi-boilerplate/compare/2ee3c940b486bae10a6c8d43e03b5e7349302f4c...
