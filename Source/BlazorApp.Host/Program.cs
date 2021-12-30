@@ -51,6 +51,7 @@ try
     app.UseStaticFiles();
     app.UseSecurityHeaders(securityHeaderSettings);
     app.UseFileStorage();
+    app.UseExceptionMiddleware();
     app.UseRouting();
     app.UseCors(ApiConstants.CorsPolicy);
     app.UseAuthentication();

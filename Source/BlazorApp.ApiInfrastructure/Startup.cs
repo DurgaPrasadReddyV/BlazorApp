@@ -94,6 +94,7 @@ public static class Startup
         services.AddScoped<CurrentUserMiddleware>();
         services.AddScoped<RequestLoggingMiddleware>();
         services.AddScoped<ResponseLoggingMiddleware>();
+        services.AddScoped<ExceptionMiddleware>();
 
         services.AddApiVersioning(config =>
         {
@@ -211,5 +212,12 @@ public static class Startup
             options.CloseOnAuthenticationExpiration = true;
         });
         return endpoints;
+    }
+
+    public static IApplicationBuilder UseExceptionMiddleware(this IApplicationBuilder app)
+    {
+        app.UseMiddleware<ExceptionMiddleware>();
+
+        return app;
     }
 }
