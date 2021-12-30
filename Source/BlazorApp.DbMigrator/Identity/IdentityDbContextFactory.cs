@@ -1,7 +1,5 @@
-using BlazorApp.Domain.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
 namespace BlazorApp.CommonInfrastructure.Persistence.Contexts;

@@ -4,8 +4,8 @@ using BlazorApp.Domain.Identity;
 using BlazorApp.CommonInfrastructure.Identity.Models;
 using BlazorApp.CommonInfrastructure.Persistence.Contexts;
 using BlazorApp.Shared.Identity;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Mapster;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Services;
 

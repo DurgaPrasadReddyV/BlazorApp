@@ -6,7 +6,6 @@ using BlazorApp.Client.Notifications;
 using BlazorApp.Client.Preferences;
 using BlazorApp.Client.Authorization;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
 using MudBlazor.Services;

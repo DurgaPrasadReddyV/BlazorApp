@@ -1,7 +1,4 @@
 using System.Linq.Expressions;
-using BlazorApp.CommonInfrastructure.Identity.Models;
-using BlazorApp.Domain.Identity;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Query;

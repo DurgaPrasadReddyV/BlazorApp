@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NJsonSchema.Generation.TypeMappers;
@@ -22,7 +21,6 @@ using NSwag;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using static Dapper.SqlMapper;
 using ZymLabs.NSwag.FluentValidation;
 using BlazorApp.Domain.Identity;
 

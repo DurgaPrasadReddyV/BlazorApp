@@ -1,22 +1,12 @@
-using BlazorApp.Application.Common.Interfaces;
-using BlazorApp.Application.Identity.Exceptions;
 using BlazorApp.Application.Identity.Interfaces;
-using BlazorApp.CommonInfrastructure.Identity;
 using BlazorApp.CommonInfrastructure.Identity.Models;
 using BlazorApp.CommonInfrastructure.Identity.Services;
 using BlazorApp.CommonInfrastructure.Mapping;
 using BlazorApp.CommonInfrastructure.Persistence.Contexts;
 using BlazorApp.Domain.Configurations;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.Net;
-using System.Reflection;
-using System.Security.Claims;
-using System.Text;
 
 namespace BlazorApp.CommonInfrastructure;
 

@@ -4,7 +4,6 @@ using BlazorApp.Application.Identity.Interfaces;
 using BlazorApp.CommonInfrastructure.Identity.Models;
 using BlazorApp.Domain.Common.Contracts;
 using BlazorApp.Domain.Identity;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

@@ -8,9 +8,9 @@ using BlazorApp.CommonInfrastructure.Identity.Extensions;
 using BlazorApp.CommonInfrastructure.Identity.Models;
 using BlazorApp.CommonInfrastructure.Persistence.Contexts;
 using BlazorApp.Shared.Identity;
-using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Mapster;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
