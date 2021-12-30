@@ -23,24 +23,24 @@ public sealed class TokensController : ControllerBase
     [AllowAnonymous]
     [ProducesResponseType(200)]
     [ProducesResponseType(400, Type = typeof(HttpValidationProblemDetails))]
-    [ProducesDefaultResponseType(typeof(ErrorResult<string>))]
+    [ProducesDefaultResponseType(typeof(ErrorResult))]
     public async Task<ActionResult<Result<TokenResponse>>> GetTokenAsync(TokenRequest request)
     {
-        var token = await _tokenService.GetTokenAsync(request, GenerateIPAddress());
+        var token = await _tokenService.GetTokenAsync(request, GenerateIpAddress());
         return Ok(token);
     }
 
     [HttpPost("refresh")]
     [AllowAnonymous]
     [ProducesResponseType(200)]
-    [ProducesDefaultResponseType(typeof(ErrorResult<string>))]
+    [ProducesDefaultResponseType(typeof(ErrorResult))]
     public async Task<ActionResult<Result<TokenResponse>>> RefreshAsync(RefreshTokenRequest request)
     {
-        var response = await _tokenService.RefreshTokenAsync(request, GenerateIPAddress());
+        var response = await _tokenService.RefreshTokenAsync(request, GenerateIpAddress());
         return Ok(response);
     }
 
-    private string GenerateIPAddress()
+    private string GenerateIpAddress()
     {
         if (Request.Headers.ContainsKey("X-Forwarded-For"))
         {

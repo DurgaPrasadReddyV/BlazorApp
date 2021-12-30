@@ -117,7 +117,7 @@ public class IdentityService : IIdentityService
         return user;
     }
 
-    public async Task<IResult<string>> RegisterAsync(RegisterRequest request, string origin)
+    public async Task<IResult<string>> RegisterAsync(RegisterUserRequest request, string origin)
     {
         var users = await _userManager.Users.ToListAsync();
         var userWithSameUserName = await _userManager.FindByNameAsync(request.UserName);
@@ -211,12 +211,7 @@ public class IdentityService : IIdentityService
 
     public async Task<IResult> ForgotPasswordAsync(ForgotPasswordRequest request, string origin)
     {
-        if (string.IsNullOrEmpty(request.Email))
-        {
-            throw new IdentityException("Email is required.", statusCode: HttpStatusCode.BadRequest);
-        }
-
-        var user = await _userManager.FindByEmailAsync(request.Email.Normalize());
+        var user = await _userManager.FindByEmailAsync(request?.Email?.Normalize());
         if (user is null || !await _userManager.IsEmailConfirmedAsync(user))
         {
             // Don't reveal that the user does not exist or is not confirmed

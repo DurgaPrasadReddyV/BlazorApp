@@ -8,7 +8,7 @@ public interface IIdentityService
 {
     Task<string> GetOrCreateFromPrincipalAsync(ClaimsPrincipal principal);
 
-    Task<IResult<string>> RegisterAsync(RegisterRequest request, string origin);
+    Task<IResult<string>> RegisterAsync(RegisterUserRequest request, string origin);
 
     Task<IResult<string>> ConfirmEmailAsync(string userId, string code);
 

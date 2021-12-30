@@ -36,7 +36,7 @@ public class RoleService : IRoleService
         var existingRole = await _roleManager.FindByIdAsync(id);
         if (existingRole == null)
         {
-            throw new IdentityException("Role Not Found", statusCode: System.Net.HttpStatusCode.NotFound);
+            throw new IdentityException("Role Not Found", statusCode: HttpStatusCode.NotFound);
         }
 
         if (DefaultRoles.Contains(existingRole.Name))
@@ -70,10 +70,11 @@ public class RoleService : IRoleService
         var role = await _roleManager.Roles.SingleOrDefaultAsync(x => x.Id == id);
         if (role is null)
         {
-            throw new IdentityException("Role Not Found", statusCode: System.Net.HttpStatusCode.NotFound);
+            throw new IdentityException("Role Not Found", statusCode: HttpStatusCode.NotFound);
         }
 
         var rolesResponse = role.Adapt<RoleDto>();
+        rolesResponse.IsDefault = DefaultRoles.Contains(role.Name);
         return await Result<RoleDto>.SuccessAsync(rolesResponse);
     }
 
@@ -86,6 +87,10 @@ public class RoleService : IRoleService
     {
         var roles = await _roleManager.Roles.ToListAsync();
         var rolesResponse = roles.Adapt<List<RoleDto>>();
+        foreach (var role in rolesResponse)
+        {
+            role.IsDefault = DefaultRoles.Contains(role.Name!);
+        }
         return await Result<List<RoleDto>>.SuccessAsync(rolesResponse);
     }
 
@@ -102,24 +107,24 @@ public class RoleService : IRoleService
         var roles = await _roleManager.Roles.Where(a => userRoles.Contains(a.Id)).ToListAsync();
 
         var rolesResponse = roles.Adapt<List<RoleDto>>();
+        foreach (var role in rolesResponse)
+        {
+            role.IsDefault = DefaultRoles.Contains(role.Name);
+        }
         return await Result<List<RoleDto>>.SuccessAsync(rolesResponse);
+    }
+
+    public async Task<bool> ExistsAsync(string roleName, string? excludeId)
+    {
+        return await _roleManager.FindByNameAsync(roleName)
+            is BlazorAppRole existingRole
+            && existingRole.Id != excludeId;
     }
 
     public async Task<Result<string>> RegisterRoleAsync(RoleRequest request)
     {
-        if (string.IsNullOrEmpty(request.Name))
-        {
-            throw new IdentityException("Name is required", statusCode: HttpStatusCode.BadRequest);
-        }
-
         if (string.IsNullOrEmpty(request.Id))
         {
-            var existingRole = await _roleManager.FindByNameAsync(request.Name);
-            if (existingRole != null)
-            {
-                throw new IdentityException("Similar Role already exists.", statusCode: System.Net.HttpStatusCode.BadRequest);
-            }
-
             var newRole = new BlazorAppRole(request.Name, request.Description);
             var response = await _roleManager.CreateAsync(newRole);
             await _context.SaveChangesAsync();
@@ -148,8 +153,15 @@ public class RoleService : IRoleService
             existingRole.Name = request.Name;
             existingRole.NormalizedName = request.Name.ToUpper();
             existingRole.Description = request.Description;
-            await _roleManager.UpdateAsync(existingRole);
-            return await Result<string>.SuccessAsync(existingRole.Id, string.Format("Role {0} Updated.", existingRole.Name));
+            var result = await _roleManager.UpdateAsync(existingRole);
+            if (result.Succeeded)
+            {
+                return await Result<string>.SuccessAsync(existingRole.Id, string.Format("Role {0} Updated.", existingRole.Name));
+            }
+            else
+            {
+                return await Result<string>.FailAsync(result.Errors.Select(e => e.Description.ToString()).ToList());
+            }
         }
     }
 
