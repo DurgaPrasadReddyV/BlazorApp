@@ -1,5 +1,6 @@
 using BlazorApp.Application;
 using BlazorApp.CommonInfrastructure;
+using BlazorApp.Domain.Identity;
 using BlazorApp.Host.Extensions;
 using Serilog;
 
@@ -25,11 +26,12 @@ try
     var jwtSettings = builder.Services.LoadJwtSettings(builder.Configuration);
     var connectionStrings = builder.Services.LoadConnectionStrings(builder.Configuration);
     var swaggerSettings = builder.Services.LoadSwaggerSettings(builder.Configuration);
+    var corsSettings = builder.Services.LoadCorsSettings(builder.Configuration);
 
     builder.Services.AddApplication();
     builder.Services.AddCommonInfrastructure();
     builder.Services.AddIdentityInfrastructure(connectionStrings);
-    builder.Services.AddHttpApiInfrastructure(jwtSettings, swaggerSettings);
+    builder.Services.AddHttpApiInfrastructure(jwtSettings, swaggerSettings, corsSettings);
 
     var app = builder.Build();
 
@@ -48,6 +50,7 @@ try
     app.UseStaticFiles();
     app.UseFileStorage();
     app.UseRouting();
+    app.UseCors(ApiConstants.CorsPolicy);
     app.UseAuthentication();
     app.UseCurrentUser();
     app.UseAuthorization();

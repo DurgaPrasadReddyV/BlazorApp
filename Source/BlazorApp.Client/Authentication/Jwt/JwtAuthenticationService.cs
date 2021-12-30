@@ -152,8 +152,8 @@ public class JwtAuthenticationService : AuthenticationStateProvider, IAuthentica
         await _localStorage.SetItemAsync(StorageConstants.Local.RefreshToken, refreshToken);
     }
 
-    private ValueTask CachePermissions(List<string> permissions) =>
-        _localStorage.SetItemAsync(StorageConstants.Local.Permissions, permissions);
+    private async ValueTask CachePermissions(List<string> permissions) =>
+        await _localStorage.SetItemAsync(StorageConstants.Local.Permissions, permissions);
 
     private async Task ClearCacheAsync()
     {
@@ -162,14 +162,14 @@ public class JwtAuthenticationService : AuthenticationStateProvider, IAuthentica
         await _localStorage.RemoveItemAsync(StorageConstants.Local.Permissions);
     }
 
-    private ValueTask<string> GetCachedAuthTokenAsync() =>
-        _localStorage.GetItemAsync<string>(StorageConstants.Local.AuthToken);
+    private async ValueTask<string> GetCachedAuthTokenAsync() =>
+        await _localStorage.GetItemAsync<string>(StorageConstants.Local.AuthToken);
 
-    private ValueTask<string> GetCachedRefreshTokenAsync() =>
-        _localStorage.GetItemAsync<string>(StorageConstants.Local.RefreshToken);
+    private async ValueTask<string> GetCachedRefreshTokenAsync() =>
+        await _localStorage.GetItemAsync<string>(StorageConstants.Local.RefreshToken);
 
-    private ValueTask<List<string>> GetCachedPermissionsAsync() =>
-        _localStorage.GetItemAsync<List<string>>(StorageConstants.Local.Permissions);
+    private async ValueTask<List<string>> GetCachedPermissionsAsync() =>
+        await _localStorage.GetItemAsync<List<string>>(StorageConstants.Local.Permissions);
 
     private IEnumerable<Claim> GetClaimsFromJwt(string jwt)
     {

@@ -24,13 +24,14 @@ using System.Security.Claims;
 using System.Text;
 using static Dapper.SqlMapper;
 using ZymLabs.NSwag.FluentValidation;
+using BlazorApp.Domain.Identity;
 
 namespace BlazorApp.CommonInfrastructure;
 
 public static class Startup
 {
     public static IServiceCollection AddHttpApiInfrastructure(this IServiceCollection services,
-        JwtSettings jwtSettings, SwaggerSettings swaggerSettings)
+        JwtSettings jwtSettings, SwaggerSettings swaggerSettings, CorsSettings corsSettings)
     {
         if (string.IsNullOrEmpty(jwtSettings.Key))
             throw new InvalidOperationException("No Key defined in JwtSettings config.");
@@ -140,6 +141,13 @@ public static class Startup
         });
 
         services.AddScoped<FluentValidationSchemaProcessor>();
+
+        services.AddCors(opt =>
+            opt.AddPolicy(ApiConstants.CorsPolicy, policy =>
+                policy.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .WithOrigins(corsSettings?.AllowedOrigins?.ToArray()!)));
 
         return services;
     }

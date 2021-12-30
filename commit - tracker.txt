@@ -1,3 +1,5 @@
 client -> 1efd930467da9f21f0b9ef83cdfc8ccc34058b54 --> User Management #41 initial
+https://github.com/fullstackhero/blazor-wasm-boilerplate/compare/1efd930467da9f21f0b9ef83cdfc8ccc34058b54...013eaf28a2f04d8b713ba6d29b8b5615ab0a8894
 
-api -> 2f79faf43ae159c361079fddf8eb16db51893673 --> added cors for react
+api -> 209c76c222759e79cd078bad6767ad21b0f89ab5 --> origin fix
+https://github.com/fullstackhero/dotnet-webapi-boilerplate/compare/209c76c222759e79cd078bad6767ad21b0f89ab5...b452c4e8f353aa73ad5c09951332342b584fb030

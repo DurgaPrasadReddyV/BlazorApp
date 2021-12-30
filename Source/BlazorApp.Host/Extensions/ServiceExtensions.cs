@@ -24,5 +24,12 @@ namespace BlazorApp.Host.Extensions
             services.Configure<SwaggerSettings>(swaggerSettingsConfigSection);
             return swaggerSettingsConfigSection.Get<SwaggerSettings>();
         }
+
+        public static CorsSettings LoadCorsSettings(this IServiceCollection services, IConfiguration config)
+        {
+            var corsSettingsConfigSection = config.GetSection($"{nameof(CorsSettings)}");
+            services.Configure<CorsSettings>(corsSettingsConfigSection);
+            return corsSettingsConfigSection.Get<CorsSettings>();
+        }
     }
 }
