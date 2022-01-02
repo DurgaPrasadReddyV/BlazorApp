@@ -18,7 +18,7 @@ services.AddDbContext<IdentityDbContext>(options =>
         });
 });
 
-services.AddIdentity<BlazorAppUser, BlazorAppRole>(options =>
+services.AddIdentity<BlazorAppIdentityUser, BlazorAppIdentityRole>(options =>
 {
     options.Password.RequiredLength = 2;
     options.Password.RequireDigit = false;
@@ -41,8 +41,8 @@ using (var migrationScope = serviceProvider.GetRequiredService<IServiceScopeFact
 using (var seedScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     var context = seedScope.ServiceProvider.GetRequiredService<IdentityDbContext>();
-    var userManager = seedScope.ServiceProvider.GetRequiredService<UserManager<BlazorAppUser>>();
-    var roleManager = seedScope.ServiceProvider.GetRequiredService<RoleManager<BlazorAppRole>>();
+    var userManager = seedScope.ServiceProvider.GetRequiredService<UserManager<BlazorAppIdentityUser>>();
+    var roleManager = seedScope.ServiceProvider.GetRequiredService<RoleManager<BlazorAppIdentityRole>>();
 
     foreach (var role in BlazorAppRoles.Get())
     {

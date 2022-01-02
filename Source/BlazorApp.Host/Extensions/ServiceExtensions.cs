@@ -38,5 +38,19 @@ namespace BlazorApp.Host.Extensions
             services.Configure<SecurityHeaderSettings>(securityHeaderSettingsConfigSection);
             return securityHeaderSettingsConfigSection.Get<SecurityHeaderSettings>();
         }
+
+        public static HangfireSettings LoadHangfireSettings(this IServiceCollection services, IConfiguration config)
+        {
+            var hangfireSettingsConfigSection = config.GetSection($"{nameof(HangfireSettings)}");
+            services.Configure<HangfireSettings>(hangfireSettingsConfigSection);
+            return hangfireSettingsConfigSection.Get<HangfireSettings>();
+        }
+
+        public static MailSettings LoadMailSettings(this IServiceCollection services, IConfiguration config)
+        {
+            var mailSettingsConfigSection = config.GetSection($"{nameof(MailSettings)}");
+            services.Configure<MailSettings>(mailSettingsConfigSection);
+            return mailSettingsConfigSection.Get<MailSettings>();
+        }
     }
 }

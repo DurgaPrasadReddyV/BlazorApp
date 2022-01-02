@@ -18,6 +18,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Update="Email Templates\email-confirmation.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Files\sample.txt">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>

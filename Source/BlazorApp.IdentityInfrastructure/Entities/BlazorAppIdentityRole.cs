@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Models;
 
-public class BlazorAppRole : IdentityRole
+public class BlazorAppIdentityRole : IdentityRole
 {
     public string? Description { get; set; }
 
-    public BlazorAppRole()
+    public BlazorAppIdentityRole()
     {
     }
 
-    public BlazorAppRole(string roleName, string? description = null)
+    public BlazorAppIdentityRole(string roleName, string? description = null)
     : base(roleName)
     {
         Description = description;

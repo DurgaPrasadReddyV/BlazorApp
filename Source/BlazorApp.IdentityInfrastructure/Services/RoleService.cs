@@ -17,12 +17,12 @@ namespace BlazorApp.CommonInfrastructure.Identity.Services;
 public class RoleService : IRoleService
 {
     private readonly ICurrentUser _currentUser;
-    private readonly RoleManager<BlazorAppRole> _roleManager;
-    private readonly UserManager<BlazorAppUser> _userManager;
+    private readonly RoleManager<BlazorAppIdentityRole> _roleManager;
+    private readonly UserManager<BlazorAppIdentityUser> _userManager;
     private readonly IdentityDbContext _context;
     private readonly IRoleClaimsService _roleClaimService;
 
-    public RoleService(RoleManager<BlazorAppRole> roleManager, UserManager<BlazorAppUser> userManager, IdentityDbContext context, ICurrentUser currentUser, IRoleClaimsService roleClaimService)
+    public RoleService(RoleManager<BlazorAppIdentityRole> roleManager, UserManager<BlazorAppIdentityUser> userManager, IdentityDbContext context, ICurrentUser currentUser, IRoleClaimsService roleClaimService)
     {
         _roleManager = roleManager;
         _userManager = userManager;
@@ -96,7 +96,7 @@ public class RoleService : IRoleService
 
     public async Task<Result<List<PermissionDto>>> GetPermissionsAsync(string id)
     {
-        var permissions = await _context.RoleClaims.Where(a => a.RoleId == id && a.ClaimType == ClaimConstants.Permission).ToListAsync();
+        var permissions = await _context.RoleClaims.Where(a => a.RoleId == id && a.ClaimType == ClaimTypes.Permission).ToListAsync();
         var permissionResponse = permissions.Adapt<List<PermissionDto>>();
         return await Result<List<PermissionDto>>.SuccessAsync(permissionResponse);
     }
@@ -117,7 +117,7 @@ public class RoleService : IRoleService
     public async Task<bool> ExistsAsync(string roleName, string? excludeId)
     {
         return await _roleManager.FindByNameAsync(roleName)
-            is BlazorAppRole existingRole
+            is BlazorAppIdentityRole existingRole
             && existingRole.Id != excludeId;
     }
 
@@ -125,7 +125,7 @@ public class RoleService : IRoleService
     {
         if (string.IsNullOrEmpty(request.Id))
         {
-            var newRole = new BlazorAppRole(request.Name, request.Description);
+            var newRole = new BlazorAppIdentityRole(request.Name, request.Description);
             var response = await _roleManager.CreateAsync(newRole);
             await _context.SaveChangesAsync();
             if (response.Succeeded)
@@ -176,26 +176,26 @@ public class RoleService : IRoleService
                 return await Result<string>.FailAsync("Role does not exist.");
             }
 
-            if (role.Name == RoleConstants.Admin)
+            if (role.Name == Domain.Identity.DefaultRoles.Admin)
             {
                 var currentUser = await _userManager.Users.SingleAsync(x => x.Id == _currentUser.GetUserId().ToString());
-                if (await _userManager.IsInRoleAsync(currentUser, RoleConstants.Admin))
+                if (await _userManager.IsInRoleAsync(currentUser, Domain.Identity.DefaultRoles.Admin))
                 {
                     return await Result<string>.FailAsync("Not allowed to modify Permissions for this Role.");
                 }
             }
 
             var selectedPermissions = request.Where(a => a.Enabled).ToList();
-            if (role.Name == RoleConstants.Admin)
+            if (role.Name == Domain.Identity.DefaultRoles.Admin)
             {
-                if (!selectedPermissions.Any(x => x.Permission == PermissionConstants.Roles.View)
-                   || !selectedPermissions.Any(x => x.Permission == PermissionConstants.RoleClaims.View)
-                   || !selectedPermissions.Any(x => x.Permission == PermissionConstants.RoleClaims.Edit))
+                if (!selectedPermissions.Any(x => x.Permission == Permissions.Roles.View)
+                   || !selectedPermissions.Any(x => x.Permission == Permissions.RoleClaims.View)
+                   || !selectedPermissions.Any(x => x.Permission == Permissions.RoleClaims.Edit))
                 {
                     return await Result<string>.FailAsync(string.Format("Not allowed to deselect {0} or {1} or {2} for this Role.",
-                        PermissionConstants.Roles.View,
-                        PermissionConstants.RoleClaims.View,
-                        PermissionConstants.RoleClaims.Edit));
+                        Permissions.Roles.View,
+                        Permissions.RoleClaims.View,
+                        Permissions.RoleClaims.Edit));
                 }
             }
 
@@ -222,7 +222,7 @@ public class RoleService : IRoleService
             {
                 foreach (var permission in selectedPermissions)
                 {
-                    var addedPermission = addedPermissions.Data?.SingleOrDefault(x => x.Type == ClaimConstants.Permission && x.Value == permission.Permission);
+                    var addedPermission = addedPermissions.Data?.SingleOrDefault(x => x.Type == ClaimTypes.Permission && x.Value == permission.Permission);
                     if (addedPermission != null)
                     {
                         var newPermission = addedPermission.Adapt<RoleClaimRequest>();
@@ -253,5 +253,5 @@ public class RoleService : IRoleService
     }
 
     internal static List<string> DefaultRoles =>
-        typeof(RoleConstants).GetAllPublicConstantValues<string>();
+        typeof(DefaultRoles).GetAllPublicConstantValues<string>();
 }

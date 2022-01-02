@@ -9,7 +9,7 @@ public class MapsterSettings
     public static void Configure()
     {
         // This is used in UserService.GetPermissionsAsync
-        TypeAdapterConfig<BlazorAppRoleClaim, PermissionDto>.NewConfig().Map(dest => dest.Permission, src => src.ClaimValue);
+        TypeAdapterConfig<BlazorAppIdentityRoleClaim, PermissionDto>.NewConfig().Map(dest => dest.Permission, src => src.ClaimValue);
 
     }
 }

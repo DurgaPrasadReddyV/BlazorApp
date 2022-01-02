@@ -21,7 +21,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpGet("all")]
-    [MustHavePermission(PermissionConstants.Roles.ListAll)]
+    [MustHavePermission(Permissions.Roles.ListAll)]
     public async Task<ActionResult<Result<List<RoleDto>>>> GetListAsync()
     {
         var roles = await _roleService.GetListAsync();
@@ -29,7 +29,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [MustHavePermission(PermissionConstants.Roles.View)]
+    [MustHavePermission(Permissions.Roles.View)]
     public async Task<ActionResult<Result<RoleDto>>> GetByIdAsync(string id)
     {
         var roles = await _roleService.GetByIdAsync(id);
@@ -51,7 +51,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpPost]
-    [MustHavePermission(PermissionConstants.Roles.Register)]
+    [MustHavePermission(Permissions.Roles.Register)]
     public async Task<ActionResult<Result<string>>> RegisterRoleAsync(RoleRequest request)
     {
         var response = await _roleService.RegisterRoleAsync(request);
@@ -59,7 +59,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [MustHavePermission(PermissionConstants.Roles.Remove)]
+    [MustHavePermission(Permissions.Roles.Remove)]
     public async Task<ActionResult<Result<string>>> DeleteAsync(string id)
     {
         var response = await _roleService.DeleteAsync(id);

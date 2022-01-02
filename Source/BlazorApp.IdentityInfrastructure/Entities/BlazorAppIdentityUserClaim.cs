@@ -2,7 +2,7 @@
 
 namespace BlazorApp.CommonInfrastructure.Identity.Models;
 
-public class BlazorAppUserClaim : IdentityUserClaim<string>
+public class BlazorAppIdentityUserClaim : IdentityUserClaim<string>
 {
 }
 

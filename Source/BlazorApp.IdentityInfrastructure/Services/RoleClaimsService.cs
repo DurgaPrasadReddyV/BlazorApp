@@ -28,7 +28,7 @@ public class RoleClaimsService : IRoleClaimsService
         {
             foreach (var role in roles)
             {
-                if (_db.RoleClaims.Any(a => a.ClaimType == ClaimConstants.Permission && a.ClaimValue == permission && a.RoleId == role.Id))
+                if (_db.RoleClaims.Any(a => a.ClaimType == ClaimTypes.Permission && a.ClaimValue == permission && a.RoleId == role.Id))
                 {
                     return true;
                 }
@@ -88,7 +88,7 @@ public class RoleClaimsService : IRoleClaimsService
                 return await Result<string>.FailAsync("Similar Role Claim already exists.");
             }
 
-            var roleClaim = request.Adapt<BlazorAppRoleClaim>();
+            var roleClaim = request.Adapt<BlazorAppIdentityRoleClaim>();
             await _db.RoleClaims.AddAsync(roleClaim);
             await _db.SaveChangesAsync();
             return await Result<string>.SuccessAsync(string.Format("Role Claim {0} created.", request.Value));

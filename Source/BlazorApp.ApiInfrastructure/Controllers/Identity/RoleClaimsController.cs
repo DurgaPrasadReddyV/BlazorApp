@@ -20,7 +20,7 @@ public class RoleClaimsController : ControllerBase
         _roleClaimService = roleClaimService;
     }
 
-    [Authorize(Policy = PermissionConstants.RoleClaims.View)]
+    [Authorize(Policy = Permissions.RoleClaims.View)]
     [HttpGet]
     public async Task<ActionResult<Result<List<RoleClaimResponse>>>> GetAllAsync()
     {
@@ -28,7 +28,7 @@ public class RoleClaimsController : ControllerBase
         return Ok(roleClaims);
     }
 
-    [Authorize(Policy = PermissionConstants.RoleClaims.View)]
+    [Authorize(Policy = Permissions.RoleClaims.View)]
     [HttpGet("{roleId}")]
     public async Task<ActionResult<Result<List<RoleClaimResponse>>>> GetAllByRoleIdAsync([FromRoute] string roleId)
     {
@@ -36,7 +36,7 @@ public class RoleClaimsController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize(Policy = PermissionConstants.RoleClaims.Create)]
+    [Authorize(Policy = Permissions.RoleClaims.Create)]
     [HttpPost]
     public async Task<ActionResult<Result<string>>> PostAsync(RoleClaimRequest request)
     {
@@ -44,7 +44,7 @@ public class RoleClaimsController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize(Policy = PermissionConstants.RoleClaims.Delete)]
+    [Authorize(Policy = Permissions.RoleClaims.Delete)]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<Result<string>>> DeleteAsync(int id)
     {

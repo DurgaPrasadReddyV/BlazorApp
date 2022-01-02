@@ -7,12 +7,12 @@ namespace BlazorApp.CommonInfrastructure.Identity.Extensions;
 
 public static class ClaimsExtension
 {
-    public static async Task<IdentityResult> AddPermissionClaimAsync(this RoleManager<BlazorAppRole> roleManager, BlazorAppRole role, string permission)
+    public static async Task<IdentityResult> AddPermissionClaimAsync(this RoleManager<BlazorAppIdentityRole> roleManager, BlazorAppIdentityRole role, string permission)
     {
         var allClaims = await roleManager.GetClaimsAsync(role);
-        if (!allClaims.Any(a => a.Type == ClaimConstants.Permission && a.Value == permission))
+        if (!allClaims.Any<Claim>(a => a.Type == Domain.Identity.ClaimTypes.Permission && a.Value == permission))
         {
-            return await roleManager.AddClaimAsync(role, new Claim(ClaimConstants.Permission, permission));
+            return await roleManager.AddClaimAsync(role, new Claim(Domain.Identity.ClaimTypes.Permission, permission));
         }
 
         return IdentityResult.Failed();

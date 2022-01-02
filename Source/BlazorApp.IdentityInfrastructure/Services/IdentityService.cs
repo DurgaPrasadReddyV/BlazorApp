@@ -14,26 +14,36 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using BlazorApp.Application.Common.Interfaces;
 
 namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
 public class IdentityService : IIdentityService
 {
-    private readonly SignInManager<BlazorAppUser> _signInManager;
-    private readonly UserManager<BlazorAppUser> _userManager;
-    private readonly RoleManager<BlazorAppRole> _roleManager;
+    private readonly SignInManager<BlazorAppIdentityUser> _signInManager;
+    private readonly UserManager<BlazorAppIdentityUser> _userManager;
+    private readonly RoleManager<BlazorAppIdentityRole> _roleManager;
     private readonly IFileStorageService _fileStorage;
+    private readonly IEmailTemplateService _templateService;
+    private readonly IMailService _mailService;
+    private readonly IJobService _jobService;
 
     public IdentityService(
-        SignInManager<BlazorAppUser> signInManager,
-        UserManager<BlazorAppUser> userManager,
-        RoleManager<BlazorAppRole> roleManager,
-        IFileStorageService fileStorage)
+        SignInManager<BlazorAppIdentityUser> signInManager,
+        UserManager<BlazorAppIdentityUser> userManager,
+        RoleManager<BlazorAppIdentityRole> roleManager,
+        IFileStorageService fileStorage,
+        IEmailTemplateService templateService,
+        IMailService mailService,
+        IJobService jobService)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _roleManager = roleManager;
         _fileStorage = fileStorage;
+        _templateService = templateService;
+        _mailService = mailService;
+        _jobService = jobService;
     }
 
     public async Task<string> GetOrCreateFromPrincipalAsync(ClaimsPrincipal principal)
@@ -51,7 +61,7 @@ public class IdentityService : IIdentityService
         }
 
         // Add user to incoming role if that isn't the case yet
-        if (principal.FindFirstValue(ClaimTypes.Role) is string role &&
+        if (principal.FindFirstValue(System.Security.Claims.ClaimTypes.Role) is string role &&
             await _roleManager.RoleExistsAsync(role) &&
             !await _userManager.IsInRoleAsync(user, role))
         {
@@ -61,9 +71,9 @@ public class IdentityService : IIdentityService
         return user.Id;
     }
 
-    private async Task<BlazorAppUser> CreateOrUpdateFromPrincipalAsync(ClaimsPrincipal principal)
+    private async Task<BlazorAppIdentityUser> CreateOrUpdateFromPrincipalAsync(ClaimsPrincipal principal)
     {
-        string? email = principal.FindFirstValue(ClaimTypes.Upn);
+        string? email = principal.FindFirstValue(System.Security.Claims.ClaimTypes.Upn);
         string? username = principal.GetDisplayName();
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username))
         {
@@ -93,11 +103,11 @@ public class IdentityService : IIdentityService
         }
         else
         {
-            user = new BlazorAppUser
+            user = new BlazorAppIdentityUser
             {
                 ObjectId = principal.GetObjectId(),
-                FirstName = principal.FindFirstValue(ClaimTypes.GivenName),
-                LastName = principal.FindFirstValue(ClaimTypes.Surname),
+                FirstName = principal.FindFirstValue(System.Security.Claims.ClaimTypes.GivenName),
+                LastName = principal.FindFirstValue(System.Security.Claims.ClaimTypes.Surname),
                 Email = email,
                 NormalizedEmail = email.ToUpper(),
                 UserName = username,
@@ -119,14 +129,13 @@ public class IdentityService : IIdentityService
 
     public async Task<IResult<string>> RegisterAsync(RegisterUserRequest request, string origin)
     {
-        var users = await _userManager.Users.ToListAsync();
         var userWithSameUserName = await _userManager.FindByNameAsync(request.UserName);
         if (userWithSameUserName != null)
         {
             throw new IdentityException(string.Format("Username {0} is already taken.", request.UserName));
         }
 
-        var user = new BlazorAppUser
+        var user = new BlazorAppIdentityUser
         {
             Email = request.Email,
             FirstName = request.FirstName,
@@ -156,9 +165,17 @@ public class IdentityService : IIdentityService
             throw new IdentityException("Validation Errors Occurred.", result.Errors.Select(a => a.Description.ToString()).ToList());
         }
 
-        await _userManager.AddToRoleAsync(user, RoleConstants.Basic);
+        await _userManager.AddToRoleAsync(user, DefaultRoles.Admin);
 
         var messages = new List<string> { string.Format("User {0} Registered.", user.UserName) };
+
+        // send verification email
+        string emailVerificationUri = await GetEmailVerificationUriAsync(user, origin);
+        var mailRequest = new MailRequest( new List<string> { user.Email! },"Confirm Registration",
+            _templateService.GenerateEmailConfirmationMail(user.UserName ?? "User", user.Email!, emailVerificationUri));
+        _jobService.Enqueue(() => _mailService.SendAsync(mailRequest));
+        
+        messages.Add($"Please check {user.Email} to verify your account!");
 
         return await Result<string>.SuccessAsync(user.Id, messages: messages);
     }
@@ -223,9 +240,10 @@ public class IdentityService : IIdentityService
         var endpointUri = new Uri(string.Concat($"{origin}/", route));
         string passwordResetUrl = QueryHelpers.AddQueryString(endpointUri.ToString(), "Token", code);
         var mailRequest = new MailRequest(
-            new List<string> { request.Email },
+            new List<string> { request?.Email! },
             "Reset Password",
             $"Your Password Reset Token is '{code}'. You can reset your password using the {endpointUri} Endpoint.");
+        _jobService.Enqueue(() => _mailService.SendAsync(mailRequest));
         return await Result.SuccessAsync("Password Reset Mail has been sent to your authorized Email.");
     }
 
@@ -271,7 +289,7 @@ public class IdentityService : IIdentityService
 
             if (request.Image != null)
             {
-                user.ImageUrl = await _fileStorage.UploadAsync<BlazorAppUser>(request.Image, FileType.Image);
+                user.ImageUrl = await _fileStorage.UploadAsync<BlazorAppIdentityUser>(request.Image, FileType.Image);
             }
 
             user.FirstName = request.FirstName;
@@ -310,12 +328,12 @@ public class IdentityService : IIdentityService
         return identityResult.Succeeded ? await Result.SuccessAsync() : await Result.FailAsync(errors);
     }
 
-    private async Task<string> GetMobilePhoneVerificationCodeAsync(BlazorAppUser user)
+    private async Task<string> GetMobilePhoneVerificationCodeAsync(BlazorAppIdentityUser user)
     {
         return await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
     }
 
-    private async Task<string> GetEmailVerificationUriAsync(BlazorAppUser user, string origin)
+    private async Task<string> GetEmailVerificationUriAsync(BlazorAppIdentityUser user, string origin)
     {
         string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

@@ -51,7 +51,7 @@ public static class Startup
                     ValidateIssuer = false,
                     ValidateLifetime = true,
                     ValidateAudience = false,
-                    RoleClaimType = ClaimTypes.Role,
+                    RoleClaimType = System.Security.Claims.ClaimTypes.Role,
                     ClockSkew = TimeSpan.Zero
                 };
                 bearer.Events = new JwtBearerEvents
@@ -59,10 +59,6 @@ public static class Startup
                     OnChallenge = context =>
                     {
                         context.HandleResponse();
-                        if (!context.Response.HasStarted)
-                        {
-                            throw new IdentityException("Authentication Failed.", statusCode: HttpStatusCode.Unauthorized);
-                        }
 
                         return Task.CompletedTask;
                     },

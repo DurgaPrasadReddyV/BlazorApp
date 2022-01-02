@@ -16,13 +16,13 @@ namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
 public class UserService : IUserService
 {
-    private readonly UserManager<BlazorAppUser> _userManager;
-    private readonly RoleManager<BlazorAppRole> _roleManager;
+    private readonly UserManager<BlazorAppIdentityUser> _userManager;
+    private readonly RoleManager<BlazorAppIdentityRole> _roleManager;
     private readonly IdentityDbContext _context;
 
     public UserService(
-        UserManager<BlazorAppUser> userManager,
-        RoleManager<BlazorAppRole> roleManager,
+        UserManager<BlazorAppIdentityUser> userManager,
+        RoleManager<BlazorAppIdentityRole> roleManager,
         IdentityDbContext context)
     {
         _userManager = userManager;
@@ -32,7 +32,7 @@ public class UserService : IUserService
 
     public async Task<PaginatedResult<UserDetailsDto>> SearchAsync(UserListFilter filter)
     {
-        var filters = new Filters<BlazorAppUser>();
+        var filters = new Filters<BlazorAppIdentityUser>();
         filters.Add(filter.IsActive.HasValue, x => x.IsActive == filter.IsActive);
 
         var query = _userManager.Users.ApplyFilter(filters);
@@ -41,7 +41,7 @@ public class UserService : IUserService
         string? ordering = new OrderByConverter().ConvertBack(filter.OrderBy);
         query = !string.IsNullOrWhiteSpace(ordering) ? query.OrderBy(ordering) : query.OrderBy(a => a.Id);
 
-        return await query.ToMappedPaginatedResultAsync<BlazorAppUser, UserDetailsDto>(filter.PageNumber, filter.PageSize);
+        return await query.ToMappedPaginatedResultAsync<BlazorAppIdentityUser, UserDetailsDto>(filter.PageNumber, filter.PageSize);
     }
 
     public async Task<Result<List<UserDetailsDto>>> GetAllAsync()
@@ -92,7 +92,7 @@ public class UserService : IUserService
             return await Result<string>.FailAsync("User Not Found.");
         }
 
-        if (await _userManager.IsInRoleAsync(user, RoleConstants.Admin))
+        if (await _userManager.IsInRoleAsync(user, DefaultRoles.Admin))
         {
             return await Result<string>.FailAsync("Not Allowed.");
         }
@@ -131,7 +131,7 @@ public class UserService : IUserService
         var roleNames = await _userManager.GetRolesAsync(user);
         foreach (var role in _roleManager.Roles.Where(r => roleNames.Contains(r.Name)).ToList())
         {
-            var permissions = await _context.RoleClaims.Where(a => a.RoleId == role.Id && a.ClaimType == ClaimConstants.Permission).ToListAsync();
+            var permissions = await _context.RoleClaims.Where(a => a.RoleId == role.Id && a.ClaimType == ClaimTypes.Permission).ToListAsync();
             var permissionResponse = permissions.Adapt<List<PermissionDto>>();
             userPermissions.AddRange(permissionResponse);
         }

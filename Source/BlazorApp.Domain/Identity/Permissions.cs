@@ -1,18 +1,12 @@
-using System.ComponentModel;
-
 namespace BlazorApp.Domain.Identity;
 
-public class PermissionConstants
+public class Permissions
 {
-    [DisplayName("Identity")]
-    [Description("Identity Permissions")]
     public static class Identity
     {
         public const string Register = "Permissions.Identity.Register";
     }
 
-    [DisplayName("Roles")]
-    [Description("Roles Permissions")]
     public static class Roles
     {
         public const string View = "Permissions.Roles.View";
@@ -22,8 +16,6 @@ public class PermissionConstants
         public const string Remove = "Permissions.Roles.Remove";
     }
 
-    [DisplayName("Role Claims")]
-    [Description("Role Claims Permissions")]
     public static class RoleClaims
     {
         public const string View = "Permissions.RoleClaims.View";
@@ -33,8 +25,6 @@ public class PermissionConstants
         public const string Search = "Permissions.RoleClaims.Search";
     }
 
-    [DisplayName("Users")]
-    [Description("Users Permissions")]
     public static class Users
     {
         public const string View = "Permissions.Users.View";
@@ -43,5 +33,10 @@ public class PermissionConstants
         public const string Delete = "Permissions.Users.Delete";
         public const string Export = "Permissions.Users.Export";
         public const string Search = "Permissions.Users.Search";
+    }
+
+    public static class Dashboard
+    {
+        public const string View = "Permissions.Dashboard.View";
     }
 }

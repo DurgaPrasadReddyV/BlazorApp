@@ -4,11 +4,11 @@ namespace BlazorApp.DbMigrator.Identity.SeedData
 {
     internal class BlazorAppUsers
     {
-        public static IEnumerable<BlazorAppUser> Get()
+        public static IEnumerable<BlazorAppIdentityUser> Get()
         {
-            return new List<BlazorAppUser>
+            return new List<BlazorAppIdentityUser>
             {
-                new BlazorAppUser
+                new BlazorAppIdentityUser
                 {
                     FirstName = "Administrator",
                     UserName = "admin",

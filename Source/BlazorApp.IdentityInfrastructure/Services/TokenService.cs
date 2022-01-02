@@ -18,11 +18,11 @@ namespace BlazorApp.CommonInfrastructure.Identity.Services;
 
 public class TokenService : ITokenService
 {
-    private readonly UserManager<BlazorAppUser> _userManager;
+    private readonly UserManager<BlazorAppIdentityUser> _userManager;
     private readonly JwtSettings _jwtSettings;
 
     public TokenService(
-        UserManager<BlazorAppUser> userManager,
+        UserManager<BlazorAppIdentityUser> userManager,
         IOptions<JwtSettings> jwtSettings)
     {
         _userManager = userManager;
@@ -64,7 +64,7 @@ public class TokenService : ITokenService
         }
 
         var userPrincipal = GetPrincipalFromExpiredToken(request.Token);
-        string userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
+        string userEmail = userPrincipal.FindFirstValue(System.Security.Claims.ClaimTypes.Email);
         var user = await _userManager.FindByEmailAsync(userEmail);
         if (user == null)
         {
@@ -84,23 +84,23 @@ public class TokenService : ITokenService
         return await Result<TokenResponse>.SuccessAsync(response);
     }
 
-    private string GenerateJwt(BlazorAppUser user, string ipAddress)
+    private string GenerateJwt(BlazorAppIdentityUser user, string ipAddress)
     {
         return GenerateEncryptedToken(GetSigningCredentials(), GetClaims(user, ipAddress));
     }
 
-    private IEnumerable<Claim> GetClaims(BlazorAppUser user, string ipAddress)
+    private IEnumerable<Claim> GetClaims(BlazorAppIdentityUser user, string ipAddress)
     {
         return new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, user.Id),
-                new(ClaimTypes.Email, user.Email),
-                new(ClaimConstants.Fullname, $"{user.FirstName} {user.LastName}"),
-                new(ClaimTypes.Name, user.FirstName ?? string.Empty),
-                new(ClaimTypes.Surname, user.LastName ?? string.Empty),
-                new(ClaimConstants.IpAddress, ipAddress),
-                new(ClaimConstants.ImageUrl, user.ImageUrl ?? string.Empty),
-                new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
+                new(System.Security.Claims.ClaimTypes.NameIdentifier, user.Id),
+                new(System.Security.Claims.ClaimTypes.Email, user.Email),
+                new(Domain.Identity.ClaimTypes.Fullname, $"{user.FirstName} {user.LastName}"),
+                new(System.Security.Claims.ClaimTypes.Name, user.FirstName ?? string.Empty),
+                new(System.Security.Claims.ClaimTypes.Surname, user.LastName ?? string.Empty),
+                new(Domain.Identity.ClaimTypes.IpAddress, ipAddress),
+                new(Domain.Identity.ClaimTypes.ImageUrl, user.ImageUrl ?? string.Empty),
+                new(System.Security.Claims.ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
             };
     }
 
@@ -135,7 +135,7 @@ public class TokenService : ITokenService
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key)),
             ValidateIssuer = false,
             ValidateAudience = false,
-            RoleClaimType = ClaimTypes.Role,
+            RoleClaimType = System.Security.Claims.ClaimTypes.Role,
             ClockSkew = TimeSpan.Zero,
             ValidateLifetime = false
         };

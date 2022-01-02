@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.CommonInfrastructure.Persistence.Contexts;
 
-public class IdentityDbContext : IdentityDbContext<BlazorAppUser, BlazorAppRole, string, BlazorAppUserClaim, BlazorAppUserRole, BlazorAppUserLogin, BlazorAppRoleClaim, BlazorAppUserToken>
+public class IdentityDbContext : IdentityDbContext<BlazorAppIdentityUser, BlazorAppIdentityRole, string, BlazorAppIdentityUserClaim, BlazorAppIdentityUserRole, BlazorAppIdentityUserLogin, BlazorAppIdentityRoleClaim, BlazorAppIdentityUserToken>
 {
     private readonly IEventService? _eventService;
     private readonly ICurrentUser? _currentUserService;
@@ -29,13 +29,13 @@ public class IdentityDbContext : IdentityDbContext<BlazorAppUser, BlazorAppRole,
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<BlazorAppRole>().ToTable(TableNames.BlazorAppRoles);
-        modelBuilder.Entity<BlazorAppRoleClaim>().ToTable(TableNames.BlazorAppRoleClaims);
-        modelBuilder.Entity<BlazorAppUserRole>().ToTable(TableNames.BlazorAppUserRoles);
-        modelBuilder.Entity<BlazorAppUser>().ToTable(TableNames.BlazorAppUsers);
-        modelBuilder.Entity<BlazorAppUserLogin>().ToTable(TableNames.BlazorAppUserLogins);
-        modelBuilder.Entity<BlazorAppUserClaim>().ToTable(TableNames.BlazorAppUserClaims);
-        modelBuilder.Entity<BlazorAppUserToken>().ToTable(TableNames.BlazorAppUserTokens);
+        modelBuilder.Entity<BlazorAppIdentityRole>().ToTable(IdentityTablesNames.BlazorAppIdentityRoles);
+        modelBuilder.Entity<BlazorAppIdentityRoleClaim>().ToTable(IdentityTablesNames.BlazorAppIdentityRoleClaims);
+        modelBuilder.Entity<BlazorAppIdentityUserRole>().ToTable(IdentityTablesNames.BlazorAppIdentityUserRoles);
+        modelBuilder.Entity<BlazorAppIdentityUser>().ToTable(IdentityTablesNames.BlazorAppIdentityUsers);
+        modelBuilder.Entity<BlazorAppIdentityUserLogin>().ToTable(IdentityTablesNames.BlazorAppIdentityUserLogins);
+        modelBuilder.Entity<BlazorAppIdentityUserClaim>().ToTable(IdentityTablesNames.BlazorAppIdentityUserClaims);
+        modelBuilder.Entity<BlazorAppIdentityUserToken>().ToTable(IdentityTablesNames.BlazorAppIdentityUserTokens);
 
         modelBuilder.AppendGlobalQueryFilter<ISoftDelete>(s => s.DeletedOn == null);
     }

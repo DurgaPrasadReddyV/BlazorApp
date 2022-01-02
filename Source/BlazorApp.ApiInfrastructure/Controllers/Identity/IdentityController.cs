@@ -27,7 +27,7 @@ public sealed class IdentityController : ControllerBase
     }
 
     [HttpPost("register")]
-    [MustHavePermission(PermissionConstants.Identity.Register)]
+    [MustHavePermission(Permissions.Identity.Register)]
     public async Task<ActionResult<Result<string>>> RegisterAsync(RegisterUserRequest request)
     {
         string origin = GenerateOrigin();

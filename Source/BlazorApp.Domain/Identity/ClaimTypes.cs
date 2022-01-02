@@ -1,6 +1,6 @@
 ﻿namespace BlazorApp.Domain.Identity;
 
-public static class ClaimConstants
+public static class ClaimTypes
 {
     public const string Fullname = "fullName";
     public const string Permission = "permission";

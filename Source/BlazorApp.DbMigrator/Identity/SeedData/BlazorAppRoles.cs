@@ -4,11 +4,11 @@ namespace BlazorApp.DbMigrator.Identity.SeedData
 {
     internal class BlazorAppRoles
     {
-        public static IEnumerable<BlazorAppRole> Get()
+        public static IEnumerable<BlazorAppIdentityRole> Get()
         {
-            return new List<BlazorAppRole>
+            return new List<BlazorAppIdentityRole>
             {
-                new BlazorAppRole
+                new BlazorAppIdentityRole
                 {
                     Name = "Admin",
                     Description = "Admin Role"

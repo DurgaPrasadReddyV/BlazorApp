@@ -24,7 +24,7 @@ public static class Startup
 
         services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(connectionStrings.DefaultConnection!));
         
-        services.AddIdentity<BlazorAppUser, BlazorAppRole>(options =>
+        services.AddIdentity<BlazorAppIdentityUser, BlazorAppIdentityRole>(options =>
         {
             options.Password.RequiredLength = 2;
             options.Password.RequireDigit = false;

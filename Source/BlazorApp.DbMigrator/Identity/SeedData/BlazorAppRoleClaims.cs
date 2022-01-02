@@ -5,101 +5,116 @@ namespace BlazorApp.DbMigrator.Identity.SeedData
 {
     internal class BlazorAppRoleClaims
     {
-        public static IEnumerable<BlazorAppRoleClaim> Get()
+        public static IEnumerable<BlazorAppIdentityRoleClaim> Get()
         {
-            return new List<BlazorAppRoleClaim>
+            return new List<BlazorAppIdentityRoleClaim>
             {
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Identity.Register
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Identity.Register
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Roles.Register
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Roles.Register
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Roles.View
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Roles.View
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Roles.Update
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Roles.Update
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Roles.Remove
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Roles.Remove
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Roles.ListAll
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Roles.ListAll
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.RoleClaims.Search
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.RoleClaims.Search
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.RoleClaims.View
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.RoleClaims.View
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.RoleClaims.Edit
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.RoleClaims.Edit
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.RoleClaims.Create
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.RoleClaims.Create
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.RoleClaims.Delete
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.RoleClaims.Delete
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Users.Export
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Users.Export
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Users.Search
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Users.Search
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Users.View
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Users.View
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Users.Edit
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Users.Edit
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Users.Create
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Users.Create
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = PermissionConstants.Users.Delete
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Users.Delete
                 },
-                new BlazorAppRoleClaim
+                new BlazorAppIdentityRoleClaim
                 {
-                    ClaimType = ClaimConstants.Permission,
-                    ClaimValue = BlazorApp.Domain.Dashboard.PermissionConstants.Dashboard.View
+                    ClaimType = ClaimTypes.Permission,
+                    ClaimValue = Permissions.Dashboard.View
                 }
             };
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

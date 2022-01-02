@@ -28,9 +28,11 @@ try
     var swaggerSettings = builder.Services.LoadSwaggerSettings(builder.Configuration);
     var corsSettings = builder.Services.LoadCorsSettings(builder.Configuration);
     var securityHeaderSettings = builder.Services.LoadSecurityHeaderSettings(builder.Configuration);
+    var hangfireSettings = builder.Services.LoadHangfireSettings(builder.Configuration);
+    var mailSettings = builder.Services.LoadMailSettings(builder.Configuration);
 
     builder.Services.AddApplication();
-    builder.Services.AddCommonInfrastructure();
+    builder.Services.AddCommonInfrastructure(connectionStrings, hangfireSettings);
     builder.Services.AddIdentityInfrastructure(connectionStrings);
     builder.Services.AddHttpApiInfrastructure(jwtSettings, swaggerSettings, corsSettings);
 
@@ -58,6 +60,8 @@ try
     app.UseCurrentUser();
     app.UseAuthorization();
     app.UseRequestLogging();
+    app.UseHangfireDashboard(hangfireSettings);
+
     app.UseEndpoints(endpoints =>
     { 
         endpoints.MapControllers().RequireAuthorization();
