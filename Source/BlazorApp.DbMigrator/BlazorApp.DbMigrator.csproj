@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorApp.IdentityInfrastructure\BlazorApp.IdentityInfrastructure.csproj" />
+		<ProjectReference Include="..\BlazorApp.PersistenceInfrastructure\BlazorApp.PersistenceInfrastructure.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -16,5 +17,11 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Application\Migrations\" />
+	  <Folder Include="Application\SeedData\" />
+	  <Folder Include="Identity\Migrations\" />
 	</ItemGroup>
 </Project>

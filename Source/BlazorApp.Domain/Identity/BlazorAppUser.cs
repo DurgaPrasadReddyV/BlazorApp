@@ -1,4 +1,4 @@
-﻿using BlazorApp.Domain.MoneyTransfer;
+﻿using BlazorApp.Domain.Common.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace BlazorApp.Domain.Identity
 {
-    internal class BlazorAppUser
+    public class BlazorAppUser : AuditableEntity
     {
-        public ICollection<Account> Accounts { get; set; }
+        public Guid IdentityUserId { get; set; }
+
+        public ICollection<Account.Account>? Accounts { get; set; }
     }
 }

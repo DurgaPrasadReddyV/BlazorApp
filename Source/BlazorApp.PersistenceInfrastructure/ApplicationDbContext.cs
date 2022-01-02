@@ -1,48 +1,39 @@
 using System.Data;
 using BlazorApp.Application.Common.Interfaces;
 using BlazorApp.Application.Identity.Interfaces;
-using BlazorApp.CommonInfrastructure.Identity.Models;
+using BlazorApp.Domain.Account;
 using BlazorApp.Domain.Common.Contracts;
 using BlazorApp.Domain.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using BlazorApp.Domain.Transaction;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.CommonInfrastructure.Persistence.Contexts;
 
-public class IdentityDbContext : IdentityDbContext<BlazorAppIdentityUser, BlazorAppIdentityRole, string, BlazorAppIdentityUserClaim, BlazorAppIdentityUserRole, BlazorAppIdentityUserLogin, BlazorAppIdentityRoleClaim, BlazorAppIdentityUserToken>
+public class ApplicationDbContext : DbContext
 {
     private readonly IEventService? _eventService;
     private readonly ICurrentUser? _currentUserService;
 
-    public IdentityDbContext(DbContextOptions options, ICurrentUser currentUserService, IEventService eventService)
+    public ApplicationDbContext(DbContextOptions options, ICurrentUser currentUserService, IEventService eventService)
     : base(options)
     {
         _currentUserService = currentUserService;
         _eventService = eventService;
     }
 
-    public IdentityDbContext(DbContextOptions options): base(options)
+    public ApplicationDbContext(DbContextOptions options): base(options)
     {
     }
+
+    public DbSet<BlazorAppUser> BlazorAppUsers => Set<BlazorAppUser>();
+
+    public DbSet<Account> Accounts => Set<Account>();
+
+    public DbSet<Transaction> Transactions => Set<Transaction>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<BlazorAppIdentityRole>()
-            .ToTable(IdentityTablesNames.BlazorAppIdentityRoles, "identity");
-        modelBuilder.Entity<BlazorAppIdentityRoleClaim>()
-            .ToTable(IdentityTablesNames.BlazorAppIdentityRoleClaims, "identity");
-        modelBuilder.Entity<BlazorAppIdentityUserRole>()
-            .ToTable(IdentityTablesNames.BlazorAppIdentityUserRoles, "identity");
-        modelBuilder.Entity<BlazorAppIdentityUser>()
-            .ToTable(IdentityTablesNames.BlazorAppIdentityUsers, "identity");
-        modelBuilder.Entity<BlazorAppIdentityUserLogin>()
-            .ToTable(IdentityTablesNames.BlazorAppIdentityUserLogins, "identity");
-        modelBuilder.Entity<BlazorAppIdentityUserClaim>()
-            .ToTable(IdentityTablesNames.BlazorAppIdentityUserClaims, "identity");
-        modelBuilder.Entity<BlazorAppIdentityUserToken>()
-            .ToTable(IdentityTablesNames.BlazorAppIdentityUserTokens, "identity");
 
         modelBuilder.AppendGlobalQueryFilter<ISoftDelete>(s => s.DeletedOn == null);
     }

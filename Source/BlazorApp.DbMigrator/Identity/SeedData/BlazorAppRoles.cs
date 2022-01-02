@@ -12,6 +12,11 @@ namespace BlazorApp.DbMigrator.Identity.SeedData
                 {
                     Name = "Admin",
                     Description = "Admin Role"
+                },
+                new BlazorAppIdentityRole
+                {
+                    Name = "Basic",
+                    Description = "Basic Role"
                 }
             };
         }

@@ -1,0 +1,3 @@
+dotnet ef migrations add Initial --context "IdentityDbContext" -o Identity/Migrations -- "Server=localhost;Port=5432;Database=BlazorApp;User Id=postgres;Password=admin"
+
+dotnet run -- "Server=localhost;Port=5432;Database=BlazorApp;User Id=postgres;Password=admin"

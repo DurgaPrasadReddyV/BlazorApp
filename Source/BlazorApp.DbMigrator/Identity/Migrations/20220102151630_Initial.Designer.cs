@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlazorApp.DbMigrator.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20211228085107_Initial")]
+    [Migration("20220102151630_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppRole", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -50,10 +50,10 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("BlazorAppRoles", (string)null);
+                    b.ToTable("BlazorAppIdentityRoles", "identity");
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppRoleClaim", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityRoleClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,10 +93,10 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("BlazorAppRoleClaims", (string)null);
+                    b.ToTable("BlazorAppIdentityRoleClaims", "identity");
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUser", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -178,10 +178,10 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("BlazorAppUsers", (string)null);
+                    b.ToTable("BlazorAppIdentityUsers", "identity");
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUserClaim", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUserClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -203,10 +203,10 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BlazorAppUserClaims", (string)null);
+                    b.ToTable("BlazorAppIdentityUserClaims", "identity");
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUserLogin", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("text");
@@ -225,10 +225,10 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BlazorAppUserLogins", (string)null);
+                    b.ToTable("BlazorAppIdentityUserLogins", "identity");
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUserRole", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUserRole", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -240,10 +240,10 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("BlazorAppUserRoles", (string)null);
+                    b.ToTable("BlazorAppIdentityUserRoles", "identity");
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUserToken", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUserToken", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -259,54 +259,54 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("BlazorAppUserTokens", (string)null);
+                    b.ToTable("BlazorAppIdentityUserTokens", "identity");
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppRoleClaim", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityRoleClaim", b =>
                 {
-                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppRole", null)
+                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUserClaim", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUserClaim", b =>
                 {
-                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUser", null)
+                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUserLogin", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUserLogin", b =>
                 {
-                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUser", null)
+                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUserRole", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUserRole", b =>
                 {
-                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppRole", null)
+                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUser", null)
+                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUserToken", b =>
+            modelBuilder.Entity("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUserToken", b =>
                 {
-                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppUser", null)
+                    b.HasOne("BlazorApp.CommonInfrastructure.Identity.Models.BlazorAppIdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -9,8 +10,12 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "identity");
+
             migrationBuilder.CreateTable(
-                name: "BlazorAppRoles",
+                name: "BlazorAppIdentityRoles",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -21,11 +26,12 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlazorAppRoles", x => x.Id);
+                    table.PrimaryKey("PK_BlazorAppIdentityRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlazorAppUsers",
+                name: "BlazorAppIdentityUsers",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -53,11 +59,12 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlazorAppUsers", x => x.Id);
+                    table.PrimaryKey("PK_BlazorAppIdentityUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlazorAppRoleClaims",
+                name: "BlazorAppIdentityRoleClaims",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -74,17 +81,19 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlazorAppRoleClaims", x => x.Id);
+                    table.PrimaryKey("PK_BlazorAppIdentityRoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BlazorAppRoleClaims_BlazorAppRoles_RoleId",
+                        name: "FK_BlazorAppIdentityRoleClaims_BlazorAppIdentityRoles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "BlazorAppRoles",
+                        principalSchema: "identity",
+                        principalTable: "BlazorAppIdentityRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlazorAppUserClaims",
+                name: "BlazorAppIdentityUserClaims",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -95,17 +104,19 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlazorAppUserClaims", x => x.Id);
+                    table.PrimaryKey("PK_BlazorAppIdentityUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BlazorAppUserClaims_BlazorAppUsers_UserId",
+                        name: "FK_BlazorAppIdentityUserClaims_BlazorAppIdentityUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "BlazorAppUsers",
+                        principalSchema: "identity",
+                        principalTable: "BlazorAppIdentityUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlazorAppUserLogins",
+                name: "BlazorAppIdentityUserLogins",
+                schema: "identity",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "text", nullable: false),
@@ -115,17 +126,19 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlazorAppUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.PrimaryKey("PK_BlazorAppIdentityUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_BlazorAppUserLogins_BlazorAppUsers_UserId",
+                        name: "FK_BlazorAppIdentityUserLogins_BlazorAppIdentityUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "BlazorAppUsers",
+                        principalSchema: "identity",
+                        principalTable: "BlazorAppIdentityUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlazorAppUserRoles",
+                name: "BlazorAppIdentityUserRoles",
+                schema: "identity",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "text", nullable: false),
@@ -133,23 +146,26 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlazorAppUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_BlazorAppIdentityUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_BlazorAppUserRoles_BlazorAppRoles_RoleId",
+                        name: "FK_BlazorAppIdentityUserRoles_BlazorAppIdentityRoles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "BlazorAppRoles",
+                        principalSchema: "identity",
+                        principalTable: "BlazorAppIdentityRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BlazorAppUserRoles_BlazorAppUsers_UserId",
+                        name: "FK_BlazorAppIdentityUserRoles_BlazorAppIdentityUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "BlazorAppUsers",
+                        principalSchema: "identity",
+                        principalTable: "BlazorAppIdentityUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlazorAppUserTokens",
+                name: "BlazorAppIdentityUserTokens",
+                schema: "identity",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "text", nullable: false),
@@ -159,49 +175,57 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlazorAppUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.PrimaryKey("PK_BlazorAppIdentityUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_BlazorAppUserTokens_BlazorAppUsers_UserId",
+                        name: "FK_BlazorAppIdentityUserTokens_BlazorAppIdentityUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "BlazorAppUsers",
+                        principalSchema: "identity",
+                        principalTable: "BlazorAppIdentityUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlazorAppRoleClaims_RoleId",
-                table: "BlazorAppRoleClaims",
+                name: "IX_BlazorAppIdentityRoleClaims_RoleId",
+                schema: "identity",
+                table: "BlazorAppIdentityRoleClaims",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
-                table: "BlazorAppRoles",
+                schema: "identity",
+                table: "BlazorAppIdentityRoles",
                 column: "NormalizedName",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlazorAppUserClaims_UserId",
-                table: "BlazorAppUserClaims",
+                name: "IX_BlazorAppIdentityUserClaims_UserId",
+                schema: "identity",
+                table: "BlazorAppIdentityUserClaims",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlazorAppUserLogins_UserId",
-                table: "BlazorAppUserLogins",
+                name: "IX_BlazorAppIdentityUserLogins_UserId",
+                schema: "identity",
+                table: "BlazorAppIdentityUserLogins",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlazorAppUserRoles_RoleId",
-                table: "BlazorAppUserRoles",
+                name: "IX_BlazorAppIdentityUserRoles_RoleId",
+                schema: "identity",
+                table: "BlazorAppIdentityUserRoles",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                table: "BlazorAppUsers",
+                schema: "identity",
+                table: "BlazorAppIdentityUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                table: "BlazorAppUsers",
+                schema: "identity",
+                table: "BlazorAppIdentityUsers",
                 column: "NormalizedUserName",
                 unique: true);
         }
@@ -209,25 +233,32 @@ namespace BlazorApp.DbMigrator.Identity.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BlazorAppRoleClaims");
+                name: "BlazorAppIdentityRoleClaims",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "BlazorAppUserClaims");
+                name: "BlazorAppIdentityUserClaims",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "BlazorAppUserLogins");
+                name: "BlazorAppIdentityUserLogins",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "BlazorAppUserRoles");
+                name: "BlazorAppIdentityUserRoles",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "BlazorAppUserTokens");
+                name: "BlazorAppIdentityUserTokens",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "BlazorAppRoles");
+                name: "BlazorAppIdentityRoles",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "BlazorAppUsers");
+                name: "BlazorAppIdentityUsers",
+                schema: "identity");
         }
     }
 }
