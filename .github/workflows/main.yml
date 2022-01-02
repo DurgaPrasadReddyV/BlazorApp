@@ -32,6 +32,9 @@ jobs:
          files: './Source/BlazorApp.Host/appsettings.json'
         env:
          ConnectionStrings.DefaultConnection: ${{ secrets.POSTGRES_CONNECTION_STRING }}
+         MailSettings.Host: ${{ secrets.EMAIL_HOST }}
+         MailSettings.UserName: ${{ secrets.EMAIL_USERNAME }}
+         MailSettings.Password: ${{ secrets.EMAIL_PASSWORD }}
     
       - name: Build and deploy the Docker image
         env:
