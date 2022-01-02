@@ -5,6 +5,7 @@ COPY *.sln .
 COPY Source/BlazorApp.ApiInfrastructure/*.csproj Source/BlazorApp.ApiInfrastructure/
 COPY Source/BlazorApp.IdentityInfrastructure/*.csproj Source/BlazorApp.IdentityInfrastructure/
 COPY Source/BlazorApp.CommonInfrastructure/*.csproj Source/BlazorApp.CommonInfrastructure/
+COPY Source/BlazorApp.PersistenceInfrastructure/*.csproj Source/BlazorApp.PersistenceInfrastructure/
 COPY Source/BlazorApp.Client/*.csproj Source/BlazorApp.Client/
 COPY Source/BlazorApp.Application/*.csproj Source/BlazorApp.Application/
 COPY Source/BlazorApp.Domain/*.csproj Source/BlazorApp.Domain/
