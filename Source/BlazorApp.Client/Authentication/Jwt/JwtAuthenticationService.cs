@@ -74,7 +74,11 @@ public class JwtAuthenticationService : AuthenticationStateProvider, IAuthentica
 
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
-
+        else
+        {
+            await ClearCacheAsync();
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
         return result;
     }
 
@@ -117,6 +121,11 @@ public class JwtAuthenticationService : AuthenticationStateProvider, IAuthentica
             }
 
             return new AccessTokenResult(AccessTokenResultStatus.Success, new AccessToken() { Value = token }, string.Empty);
+        }
+        catch
+        {
+            await ClearCacheAsync();
+            throw;
         }
         finally
         {
