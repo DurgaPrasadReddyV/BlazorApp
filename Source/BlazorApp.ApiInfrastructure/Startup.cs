@@ -141,7 +141,8 @@ public static class Startup
             opt.AddPolicy(ApiConstants.CorsPolicy, policy =>
                 policy.AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowAnyOrigin()));
+                    .SetIsOriginAllowed(origin => true)
+                    .AllowCredentials()));
 
         return services;
     }
