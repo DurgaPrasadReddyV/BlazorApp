@@ -142,7 +142,7 @@ public static class Startup
                 policy.AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials()
-                    .AllowAnyOrigin();
+                    .AllowAnyOrigin()));
 
         return services;
     }
