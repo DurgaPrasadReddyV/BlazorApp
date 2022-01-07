@@ -1,66 +1,41 @@
 ﻿using BlazorApp.Client.ApiClient;
 using BlazorApp.Client.Authentication;
 using BlazorApp.Client.Authorization;
+using BlazorApp.Client.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 
 namespace BlazorApp.Client.Pages.Personal;
-
 public partial class Profile
 {
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject]
+    protected IAuthenticationService AuthService { get; set; } = default!;
+    [Inject]
+    protected IIdentityClient IdentityClient { get; set; } = default!;
+
     private readonly UpdateProfileRequest _profileModel = new();
+
+    private string? _imageUrl;
+    private string? _userId;
     private char _firstLetterOfName;
 
-    [Inject]
-    private IIdentityClient _identityClient { get; set; } = default!;
-
-    [Inject]
-    private IAuthenticationService _authService { get; set; } = default!;
-
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthState { get; set; } = default!;
-
-    public string? UserId { get; set; }
-
-    private async Task UpdateProfileAsync()
-    {
-        var response = await _identityClient.UpdateProfileAsync(_profileModel);
-        if (response.Succeeded)
-        {
-            await _authService.LogoutAsync();
-            _snackBar.Add(_localizer["Your Profile has been updated. Please Login to Continue."], Severity.Success);
-            _navigationManager.NavigateTo("/");
-        }
-        else
-        {
-            if (response.Messages != null)
-            {
-                foreach (string? message in response.Messages)
-                {
-                    _snackBar.Add(message, Severity.Error);
-                }
-            }
-        }
-    }
+    private CustomValidation? _customValidation;
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadDataAsync();
-    }
-
-    private async Task LoadDataAsync()
-    {
         var state = await AuthState;
         var user = state.User;
-        if (user != null)
+        if (user is not null)
         {
-            _profileModel.Email = user.GetEmail();
-            _profileModel.FirstName = user.GetFirstName();
-            _profileModel.LastName = user.GetSurname();
+            _profileModel.Email = user.GetEmail() ?? string.Empty;
+            _profileModel.FirstName = user.GetFirstName() ?? string.Empty;
+            _profileModel.LastName = user.GetSurname() ?? string.Empty;
             _profileModel.PhoneNumber = user.GetPhoneNumber();
-            ImageDataUrl = user?.GetImageUrl()?.Replace("{server_url}/", _hostEnvironment.BaseAddress);
-            UserId = user?.GetUserId();
+            _imageUrl = user?.GetImageUrl()?.Replace("{server_url}/", _hostEnvironment.BaseAddress);
+            _userId = user?.GetUserId();
         }
 
         if (_profileModel.FirstName?.Length > 0)
@@ -69,49 +44,40 @@ public partial class Profile
         }
     }
 
-    private IBrowserFile? _file;
-
-    [Parameter]
-    public string? ImageDataUrl { get; set; }
+    private async Task UpdateProfileAsync()
+    {
+        if (await ApiHelper.ExecuteCallGuardedAsync(
+                () => IdentityClient.UpdateProfileAsync(_profileModel), _snackBar, _customValidation)
+            is Result result && result.Succeeded)
+        {
+            _snackBar.Add("Your Profile has been updated. Please Login again to Continue.", Severity.Success);
+            await AuthService.ReLoginAsync(_navigationManager.Uri);
+        }
+    }
 
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
-        _file = e.File;
-        if (_file != null)
+        var file = e.File;
+        if (file is not null)
         {
             var supportedFormats = new List<string> { ".jpeg", ".jpg", ".png" };
-            string? extension = Path.GetExtension(_file.Name);
+            string? extension = Path.GetExtension(file.Name);
             if (!supportedFormats.Contains(extension.ToLower()))
             {
                 _snackBar.Add("File Format Not Supported.", Severity.Error);
                 return;
             }
 
-            string? fileName = $"{UserId}-{Guid.NewGuid().ToString("N")}";
+            string? fileName = $"{_userId}-{Guid.NewGuid().ToString("N")}";
             fileName = fileName.Substring(0, Math.Min(fileName.Length, 90));
             string? format = "image/png";
-            var imageFile = await e.File.RequestImageFileAsync(format, 400, 400);
+            var imageFile = await file.RequestImageFileAsync(format, 400, 400);
             byte[]? buffer = new byte[imageFile.Size];
             await imageFile.OpenReadStream().ReadAsync(buffer);
             string? base64String = $"data:image/png;base64,{Convert.ToBase64String(buffer)}";
             _profileModel.Image = new FileUploadRequest() { Name = fileName, Data = base64String, Extension = extension };
-            var response = await _identityClient.UpdateProfileAsync(_profileModel);
-            if (response.Succeeded)
-            {
-                await _authService.LogoutAsync();
-                _snackBar.Add(_localizer["Your Profile has been updated. Please Login to Continue."], Severity.Success);
-                _navigationManager.NavigateTo("/");
-            }
-            else
-            {
-                if (response.Messages != null)
-                {
-                    foreach (string? message in response.Messages)
-                    {
-                        _snackBar.Add(message, Severity.Error);
-                    }
-                }
-            }
+
+            await UpdateProfileAsync();
         }
     }
 }

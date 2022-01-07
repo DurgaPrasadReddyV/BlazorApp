@@ -91,6 +91,12 @@ public class JwtAuthenticationService : AuthenticationStateProvider, IAuthentica
         _navigation.NavigateTo("/login");
     }
 
+    public async Task ReLoginAsync(string returnUrl)
+    {
+        await LogoutAsync();
+        _navigation.NavigateTo(returnUrl);
+    }
+
     public async ValueTask<AccessTokenResult> RequestAccessToken()
     {
         var authState = await GetAuthenticationStateAsync();

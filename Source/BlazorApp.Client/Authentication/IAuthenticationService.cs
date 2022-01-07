@@ -7,4 +7,6 @@ public interface IAuthenticationService
     Task<Result> LoginAsync(TokenRequest request);
 
     Task LogoutAsync();
+
+    Task ReLoginAsync(string returnUrl);
 }

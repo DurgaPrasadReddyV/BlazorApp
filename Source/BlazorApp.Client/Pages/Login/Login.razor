@@ -6,6 +6,7 @@
 </div>
 <div class="fsh-center-text">
     <MudText Typo="Typo.h4" GutterBottom="true">Sign In</MudText>
+    <MudText>Enter your credentials to get started.</MudText>
 </div>
 <br />
 <EditForm Model="@_tokenRequest" OnValidSubmit="SubmitAsync">
@@ -23,7 +24,7 @@
         </MudItem>
         <MudItem xs="12" Class="d-flex justify-space-between align-center">
             <MudCheckBox T="bool" Label="Remember me?" Color="Color.Primary" Class="ml-n1"></MudCheckBox>
-            <MudLink Href="/account/forgot-password">Forgot password?</MudLink>
+            <MudButton Link="/account/forgot-password">Forgot password?</MudButton>
         </MudItem>
         <MudItem xs="12" Class="d-flex justify-center">
             <MudButton ButtonType="ButtonType.Submit" Disabled="BusySubmitting" Variant="Variant.Filled"

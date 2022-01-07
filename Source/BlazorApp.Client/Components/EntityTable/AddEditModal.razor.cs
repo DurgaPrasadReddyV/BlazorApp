@@ -78,13 +78,15 @@ public partial class AddEditModal<TRequest> : IAddEditModal
 
     private async Task SaveAsync()
     {
-        if (await ApiHelper.ExecuteCallGuardedAsync(
+        var result = await ApiHelper.ExecuteCallGuardedAsync(
                 () => SaveFunc(RequestModel),
                 _snackBar,
                 _customValidation,
-                L["Success"])
-            is not null)
+                L["Success"]);
+        if (result is not null)
         {
+            if(result.Succeeded)
+                _snackBar.Add("Operation Completed.", Severity.Success);
             _mudDialog.Close();
         }
     }

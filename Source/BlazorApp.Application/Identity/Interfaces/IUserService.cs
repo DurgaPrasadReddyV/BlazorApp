@@ -18,4 +18,6 @@ public interface IUserService
     Task<IResult<string>> AssignRolesAsync(string userId, UserRolesRequest request);
 
     Task<Result<List<PermissionDto>>> GetPermissionsAsync(string id);
+
+    Task<IResult> ToggleUserStatusAsync(ToggleUserStatusRequest request);
 }

@@ -7,9 +7,6 @@ namespace BlazorApp.Client.Pages.Personal;
 
 public partial class Security
 {
-    [CascadingParameter]
-    public Task<AuthenticationState> AuthState { get; set; } = default!;
-
     [Inject]
     public IIdentityClient IdentityClient { get; set; } = default!;
 
@@ -20,10 +17,9 @@ public partial class Security
     private async Task ChangePasswordAsync()
     {
         if (await ApiHelper.ExecuteCallGuardedAsync(
-                () => IdentityClient.ChangePasswordAsync(_passwordModel), _snackBar, _customValidation)
+                () => IdentityClient.ChangePasswordAsync(_passwordModel), _snackBar, _customValidation,"Password Changed")
             is Result result && result.Succeeded)
         {
-            _snackBar.Add("Password Changed!", Severity.Success);
             _passwordModel.Password = string.Empty;
             _passwordModel.NewPassword = string.Empty;
             _passwordModel.ConfirmNewPassword = string.Empty;
