@@ -2,9 +2,9 @@ using System.Net;
 
 namespace BlazorApp.Application.Common.Exceptions;
 
-public class EntityCannotBeDeleted : CustomException
+public class ConflictException : CustomException
 {
-    public EntityCannotBeDeleted(string message)
+    public ConflictException(string message)
     : base(message, null, HttpStatusCode.Conflict)
     {
     }

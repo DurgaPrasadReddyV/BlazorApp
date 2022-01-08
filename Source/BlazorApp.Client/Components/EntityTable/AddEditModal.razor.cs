@@ -16,7 +16,7 @@ public partial class AddEditModal<TRequest> : IAddEditModal
     public TRequest RequestModel { get; set; } = default!;
     [Parameter]
     [EditorRequired]
-    public Func<TRequest, Task<Result>> SaveFunc { get; set; } = default!;
+    public Func<TRequest, Task> SaveFunc { get; set; } = default!;
 
     [Parameter]
     public Func<Task>? OnInitializedFunc { get; set; }
@@ -45,7 +45,7 @@ public partial class AddEditModal<TRequest> : IAddEditModal
     // This should not be necessary anymore, except maybe in the case when the
     // UpdateEntityRequest has different validation rules than the CreateEntityRequest.
     // If that would happen a lot we can still change the design so this method doesn't need to be called manually.
-    public Result Validate(object request)
+    public bool Validate(object request)
     {
         var results = new List<ValidationResult>();
         if (!Validator.TryValidateObject(request, new ValidationContext(request), results, true))
@@ -70,23 +70,19 @@ public partial class AddEditModal<TRequest> : IAddEditModal
 
             _customValidation?.DisplayErrors(errors);
 
-            return new Result { Succeeded = false, Messages = new List<string>() { "Validation failed." } };
+            return false;
         }
 
-        return new Result { Succeeded = true };
+        return true;
     }
 
     private async Task SaveAsync()
     {
-        var result = await ApiHelper.ExecuteCallGuardedAsync(
-                () => SaveFunc(RequestModel),
-                _snackBar,
-                _customValidation,
-                L["Success"]);
-        if (result is not null)
+        if (await ApiHelper.ExecuteCallGuardedAsync(
+            () => SaveFunc(RequestModel),
+            _snackBar,
+            _customValidation, "Operation Completed."))
         {
-            if(result.Succeeded)
-                _snackBar.Add("Operation Completed.", Severity.Success);
             _mudDialog.Close();
         }
     }

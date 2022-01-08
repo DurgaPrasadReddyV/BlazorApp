@@ -6,8 +6,6 @@ namespace BlazorApp.Application.Identity.Interfaces;
 
 public interface IIdentityService
 {
-    Task<string> GetOrCreateFromPrincipalAsync(ClaimsPrincipal principal);
-
     Task<IResult<string>> RegisterAsync(RegisterUserRequest request, string origin);
 
     Task<IResult<string>> ConfirmEmailAsync(string userId, string code);

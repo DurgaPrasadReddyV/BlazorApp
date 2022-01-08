@@ -28,6 +28,8 @@ public class IdentityService : IIdentityService
     private readonly IMailService _mailService;
     private readonly IJobService _jobService;
 
+    private readonly IRepository _repository;
+
     public IdentityService(
         SignInManager<BlazorAppIdentityUser> signInManager,
         UserManager<BlazorAppIdentityUser> userManager,
@@ -35,7 +37,8 @@ public class IdentityService : IIdentityService
         IFileStorageService fileStorage,
         IEmailTemplateService templateService,
         IMailService mailService,
-        IJobService jobService)
+        IJobService jobService,
+        IRepository repository)
     {
         _signInManager = signInManager;
         _userManager = userManager;
@@ -44,87 +47,7 @@ public class IdentityService : IIdentityService
         _templateService = templateService;
         _mailService = mailService;
         _jobService = jobService;
-    }
-
-    public async Task<string> GetOrCreateFromPrincipalAsync(ClaimsPrincipal principal)
-    {
-        string? objectId = principal.GetObjectId();
-        if (string.IsNullOrWhiteSpace(objectId))
-        {
-            throw new IdentityException("Invalid objectId");
-        }
-
-        var user = await _userManager.Users.Where(u => u.ObjectId == objectId).FirstOrDefaultAsync();
-        if (user is null)
-        {
-            user = await CreateOrUpdateFromPrincipalAsync(principal);
-        }
-
-        // Add user to incoming role if that isn't the case yet
-        if (principal.FindFirstValue(System.Security.Claims.ClaimTypes.Role) is string role &&
-            await _roleManager.RoleExistsAsync(role) &&
-            !await _userManager.IsInRoleAsync(user, role))
-        {
-            await _userManager.AddToRoleAsync(user, role);
-        }
-
-        return user.Id;
-    }
-
-    private async Task<BlazorAppIdentityUser> CreateOrUpdateFromPrincipalAsync(ClaimsPrincipal principal)
-    {
-        string? email = principal.FindFirstValue(System.Security.Claims.ClaimTypes.Upn);
-        string? username = principal.GetDisplayName();
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username))
-        {
-            throw new IdentityException(string.Format("Username or Email not valid."));
-        }
-
-        var user = await _userManager.FindByNameAsync(username);
-        if (user is not null && !string.IsNullOrWhiteSpace(user.ObjectId))
-        {
-            throw new IdentityException(string.Format("Username {0} is already taken.", username));
-        }
-
-        if (user is null)
-        {
-            user = await _userManager.FindByEmailAsync(email);
-            if (user is not null && !string.IsNullOrWhiteSpace(user.ObjectId))
-            {
-                throw new IdentityException(string.Format("Email {0} is already taken.", email));
-            }
-        }
-
-        IdentityResult? result;
-        if (user is not null)
-        {
-            user.ObjectId = principal.GetObjectId();
-            result = await _userManager.UpdateAsync(user);
-        }
-        else
-        {
-            user = new BlazorAppIdentityUser
-            {
-                ObjectId = principal.GetObjectId(),
-                FirstName = principal.FindFirstValue(System.Security.Claims.ClaimTypes.GivenName),
-                LastName = principal.FindFirstValue(System.Security.Claims.ClaimTypes.Surname),
-                Email = email,
-                NormalizedEmail = email.ToUpper(),
-                UserName = username,
-                NormalizedUserName = username.ToUpper(),
-                EmailConfirmed = true,
-                PhoneNumberConfirmed = true,
-                IsActive = true
-            };
-            result = await _userManager.CreateAsync(user);
-        }
-
-        if (!result.Succeeded)
-        {
-            throw new IdentityException("Validation Errors Occurred.", result.Errors.Select(a => a.Description.ToString()).ToList());
-        }
-
-        return user;
+        _repository = repository;
     }
 
     public async Task<IResult<string>> RegisterAsync(RegisterUserRequest request, string origin)
@@ -164,6 +87,11 @@ public class IdentityService : IIdentityService
         {
             throw new IdentityException("Validation Errors Occurred.", result.Errors.Select(a => a.Description.ToString()).ToList());
         }
+
+        var createdUser  = await _userManager.FindByEmailAsync(request.Email?.Normalize());
+        var blazorAppUser = new BlazorAppUser(Guid.Parse(createdUser.Id));
+        await _repository.CreateAsync<BlazorAppUser>(blazorAppUser);
+        await _repository.SaveChangesAsync();
 
         await _userManager.AddToRoleAsync(user, DefaultRoles.Admin);
 

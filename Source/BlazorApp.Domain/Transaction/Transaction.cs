@@ -10,7 +10,9 @@ namespace BlazorApp.Domain.Transaction
 
         public DateTime MadeOn { get; set; }
 
-        public string? AccountId { get; set; }
+        public Guid AccountId { get; set; }
+
+        public Account.Account Account { get; set; }
 
         public string? Source { get; set; }
 

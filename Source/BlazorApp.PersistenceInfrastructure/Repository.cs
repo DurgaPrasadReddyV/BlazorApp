@@ -11,7 +11,7 @@ using BlazorApp.Shared;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
-namespace DN.WebApi.Infrastructure.Persistence;
+namespace BlazorApp.Infrastructure.Persistence;
 
 public class Repository : IRepository
 {

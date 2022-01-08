@@ -14,14 +14,14 @@ public class IdentityDbContext : IdentityDbContext<BlazorAppIdentityUser, Blazor
     private readonly IEventService? _eventService;
     private readonly ICurrentUser? _currentUserService;
 
-    public IdentityDbContext(DbContextOptions options, ICurrentUser currentUserService, IEventService eventService)
+    public IdentityDbContext(DbContextOptions<IdentityDbContext> options, ICurrentUser currentUserService, IEventService eventService)
     : base(options)
     {
         _currentUserService = currentUserService;
         _eventService = eventService;
     }
 
-    public IdentityDbContext(DbContextOptions options): base(options)
+    public IdentityDbContext(DbContextOptions<IdentityDbContext> options): base(options)
     {
     }
 

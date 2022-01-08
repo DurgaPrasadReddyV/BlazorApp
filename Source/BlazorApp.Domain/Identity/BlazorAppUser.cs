@@ -9,6 +9,16 @@ namespace BlazorApp.Domain.Identity
 {
     public class BlazorAppUser : AuditableEntity
     {
+        public BlazorAppUser(Guid identityUserId)
+        {
+            IdentityUserId = identityUserId;
+        }
+
+        internal BlazorAppUser()
+        {
+            
+        }
+
         public Guid IdentityUserId { get; set; }
 
         public ICollection<Account.Account>? Accounts { get; set; }

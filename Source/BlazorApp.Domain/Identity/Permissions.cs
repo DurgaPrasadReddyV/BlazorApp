@@ -39,4 +39,22 @@ public class Permissions
     {
         public const string View = "Permissions.Dashboard.View";
     }
+
+    public static class Accounts
+    {
+        public const string View = "Permissions.Accounts.View";
+        public const string Search = "Permissions.Accounts.Search";
+        public const string Register = "Permissions.Accounts.Register";
+        public const string Update = "Permissions.Accounts.Update";
+        public const string Remove = "Permissions.Accounts.Remove";
+    }
+
+    public static class Transactions
+    {
+        public const string View = "Permissions.Transactions.View";
+        public const string Search = "Permissions.Transactions.Search";
+        public const string Register = "Permissions.Transactions.Register";
+        public const string Update = "Permissions.Transactions.Update";
+        public const string Remove = "Permissions.Transactions.Remove";
+    }
 }

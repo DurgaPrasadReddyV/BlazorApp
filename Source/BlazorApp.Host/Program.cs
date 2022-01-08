@@ -35,6 +35,7 @@ try
     builder.Services.AddCommonInfrastructure(connectionStrings, hangfireSettings);
     builder.Services.AddIdentityInfrastructure(connectionStrings);
     builder.Services.AddHttpApiInfrastructure(jwtSettings, swaggerSettings, corsSettings);
+    builder.Services.AddPersistenceInfrastructure(connectionStrings);
 
     var app = builder.Build();
 

@@ -23,6 +23,9 @@ using System.Security.Claims;
 using System.Text;
 using ZymLabs.NSwag.FluentValidation;
 using BlazorApp.Domain.Identity;
+using BlazorApp.Host.Controllers;
+
+[assembly: ApiConventionType(typeof(FSHApiConventions))]
 
 namespace BlazorApp.CommonInfrastructure;
 

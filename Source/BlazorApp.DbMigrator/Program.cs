@@ -18,6 +18,16 @@ services.AddDbContext<IdentityDbContext>(options =>
         });
 });
 
+services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseNpgsql(args[0],
+        npgsql =>
+        {
+            npgsql.MigrationsAssembly(typeof(ApplicationDbContextFactory).GetTypeInfo().Assembly.GetName().Name);
+            npgsql.MigrationsHistoryTable("__Application_Migrations");
+        });
+});
+
 services.AddIdentity<BlazorAppIdentityUser, BlazorAppIdentityRole>(options =>
 {
     options.Password.RequiredLength = 2;
@@ -33,6 +43,11 @@ var serviceProvider = services.BuildServiceProvider();
 using (var migrationScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     using (var context = migrationScope.ServiceProvider.GetRequiredService<IdentityDbContext>())
+    {
+        await context.Database.MigrateAsync();
+    }
+
+    using (var context = migrationScope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
     {
         await context.Database.MigrateAsync();
     }
