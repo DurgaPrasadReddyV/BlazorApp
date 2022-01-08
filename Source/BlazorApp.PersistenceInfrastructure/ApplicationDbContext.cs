@@ -14,14 +14,14 @@ public class ApplicationDbContext : DbContext
     private readonly IEventService? _eventService;
     private readonly ICurrentUser? _currentUserService;
 
-    public ApplicationDbContext(DbContextOptions options, ICurrentUser currentUserService, IEventService eventService)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUser currentUserService, IEventService eventService)
     : base(options)
     {
         _currentUserService = currentUserService;
         _eventService = eventService;
     }
 
-    public ApplicationDbContext(DbContextOptions options): base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
     {
     }
 

@@ -4,6 +4,18 @@ namespace BlazorApp.Domain.Transaction
 {
     public class Transaction : AuditableEntity
     {
+        public Transaction(string name)
+        {
+            Name = name;
+        }
+
+        internal Transaction()
+        {
+        
+        }
+
+        public string? Name { get; set; }
+
         public string? Description { get; set; }
 
         public decimal Amount { get; set; }
